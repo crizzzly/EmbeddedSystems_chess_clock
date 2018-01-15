@@ -20,19 +20,19 @@
 
 
 /* DEFINITIONS *****************************************************/
-#define TIMER_ON                    0x8000
-#define STOP_TIMER_IN_IDLE_MODE     0x2000
+#define TIMER_ON                    0x8000  //1000 0000 0000 0000
+#define STOP_TIMER_IN_IDLE_MODE     0x2000  //0010 0000 0000 0000    
 #define TIMER_SOURCE_INTERNAL       0x0000
-#define TIMER_SOURCE_EXTERNAL       0x0002
-#define GATED_TIME_DISABLED         0x0000
+#define TIMER_SOURCE_EXTERNAL       0x0002  //0000 0000 0000 0010
+#define GATED_TIME_DISABLED         0x0000  
 #define TIMER_16_BIT_MODE           0X0000
 
 #define TIMER_PRESCALER_1           0x0000
-#define TIMER_PRESCALER_8           0x0010
-#define TIMER_PRESCALER_64          0x0020
-#define TIMER_PRESCALER_256         0x0030
-#define TIMER_INTERRUPT_PRIORITY    0x0001
-#define TIMER_INTERRUPT_PRIORITY_4  0x0004
+#define TIMER_PRESCALER_8           0x0010  //0000 0000 0001 0000
+#define TIMER_PRESCALER_64          0x0020  //0000 0000 0010 0000
+#define TIMER_PRESCALER_256         0x0030  //0000 0000 0011 0000
+#define TIMER_INTERRUPT_PRIORITY    0x0001  //0000 0000 0000 0001
+#define TIMER_INTERRUPT_PRIORITY_4  0x0004  //0000 0000 0000 0100
 
 /* Type Definitions +++++++++++++++++++++++++++++++++++++++++++++++*/
 typedef struct {
@@ -152,6 +152,9 @@ bool TIMER_SetConfig(TIMER_CONFIGURATIONS config){
             PR1 = 0x8000 ;
             
             //select internal clock source
+            /*If T32 = 0, when a match occurs between the 16-bit timer register 
+            * (TMRx) and the respective 16-bit period register (PRx), the A/D 
+            * Special Event Trigger signal is generated */
             T1CON = TIMER_ON |
                     TIMER_SOURCE_EXTERNAL |
                     GATED_TIME_DISABLED |
