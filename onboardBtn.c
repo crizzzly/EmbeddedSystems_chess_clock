@@ -6,7 +6,7 @@
  */
 
 
-#include "xc.h"
+#include <xc.h>
 #include "onboardBtn.h"
 #include <stdbool.h>
 
@@ -98,4 +98,40 @@ void BUTTON_Disable(BUTTON button){
         case BTN_NONE:
             break;
     }    
+}
+
+/*********************************************************************
+ * Function: void BUTTON_Enable(BUTTON button);
+ *
+ * Overview: Returns the current state of the requested button
+ *
+ * PreCondition: button configured via BUTTON_SetConfiguration()
+ *
+ * Input: BUTTON button - enumeration of the buttons available in
+ *        this demo.  They should be meaningful names and not the names
+ *        of the buttons on the silkscreen on the board (as the demo
+ *        code may be ported to other boards).
+ *         i.e. - ButtonIsPressed(BUTTON_SEND_MESSAGE);
+ *
+ * Output: None
+ *
+ ********************************************************************/
+void BUTTON_Enable ( BUTTON button )
+{
+     switch (button){
+        case BTN_ONB0:
+            BTN_ONB0_TRIS = PIN_INPUT;
+            break;
+        case BTN_ONB1:
+            BTN_ONB1_TRIS = PIN_INPUT;      
+            break;
+        case BTN_ONB2:
+            BTN_ONB2_TRIS = PIN_INPUT;
+            break;
+        case BTN_ONB3:
+            BTN_ONB3_TRIS = PIN_INPUT;
+            break;
+        case BTN_NONE:
+            break;
+    } 
 }

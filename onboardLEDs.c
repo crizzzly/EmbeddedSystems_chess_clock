@@ -6,7 +6,8 @@
  */
 
 
-#include "xc.h"
+#include <xc.h>
+#include <stdbool.h>
 #include "onboardLEDs.h"
 
 #define LED_ONB0_LAT LATBbits.LATB8

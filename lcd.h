@@ -110,5 +110,4 @@ void LCD_ClearScreen(void);
 ********************************************************************/
 void LCD_CursorEnable(bool enable);
 
-#endif	/* XC_HEADER_TEMPLATE_H */
 

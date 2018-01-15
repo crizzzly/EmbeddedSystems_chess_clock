@@ -6,7 +6,7 @@
  */
 
 
-#include "xc.h"
+#include <xc.h>
 #include "lcd.h"
 #include <stdint.h>
 
@@ -23,7 +23,7 @@
 //characters per line
 #define LCD_MAX_COLUMN      16
 
-#define LCD_SendData(data) { PMADDR = 0x0001; PMDIN1 = data; LCD_Wait(LCD_F_INSTR); }
+#define LCD_SendData(data) { PMADDR = 0x0001; PMDIN1 = data; LCD_Wait(LCD_FAST_INSTR); }
 #define LCD_SendCommand(command, delay) { PMADDR = 0x0000; PMDIN1 = command; LCD_Wait(delay); }
 #define LCD_COMMAND_CLEAR_SCREEN        0x01    //0000 0001
 #define LCD_COMMAND_RETURN_HOME         0x02    //0000 0010
@@ -131,9 +131,9 @@ bool LCD_Initialize(void){
     
     LCD_Wait ( LCD_STARTUP ) ;
 
-    LCD_SendCommand ( LCD_COMMAND_SET_MODE_8_BIT ,     LCD_F_INSTR + LCD_STARTUP ) ;
-    LCD_SendCommand ( LCD_COMMAND_CURSOR_OFF ,         LCD_F_INSTR ) ;
-    LCD_SendCommand ( LCD_COMMAND_ENTER_DATA_MODE ,    LCD_S_INSTR ) ;
+    LCD_SendCommand ( LCD_COMMAND_SET_MODE_8_BIT ,     LCD_FAST_INSTR + LCD_STARTUP ) ;
+    LCD_SendCommand ( LCD_COMMAND_CURSOR_OFF ,         LCD_FAST_INSTR ) ;
+    LCD_SendCommand ( LCD_COMMAND_ENTER_DATA_MODE ,    LCD_SLOW_INSTR ) ;
 
     LCD_ClearScreen ( ) ;
 
@@ -187,7 +187,7 @@ void LCD_PutString(char* inputString, uint16_t length){
 * Output: None
 *
 ********************************************************************/
-void LCD_PutChar(char){
+void LCD_PutChar(char inputCharacter){
     
     switch (inputCharacter){
         case '\r':
@@ -216,11 +216,11 @@ void LCD_PutChar(char){
             if (column == LCD_MAX_COLUMN) {
                 column = 0 ;
                 if (row == 0) {
-                    LCD_SendCommand ( LCD_COMMAND_ROW_1_HOME , LCD_S_INSTR ) ;
+                    LCD_SendCommand ( LCD_COMMAND_ROW_1_HOME , LCD_SLOW_INSTR ) ;
                     row = 1 ;
                 }
                 else {
-                    LCD_SendCommand ( LCD_COMMAND_ROW_0_HOME , LCD_S_INSTR ) ;
+                    LCD_SendCommand ( LCD_COMMAND_ROW_0_HOME , LCD_SLOW_INSTR ) ;
                     row = 0 ;
                 }
             }
@@ -241,8 +241,8 @@ void LCD_PutChar(char){
 ********************************************************************/
 void LCD_ClearScreen ( void )
 {
-    LCD_SendCommand ( LCD_COMMAND_CLEAR_SCREEN , LCD_S_INSTR ) ;
-    LCD_SendCommand ( LCD_COMMAND_RETURN_HOME ,  LCD_S_INSTR ) ;
+    LCD_SendCommand ( LCD_COMMAND_CLEAR_SCREEN , LCD_SLOW_INSTR ) ;
+    LCD_SendCommand ( LCD_COMMAND_RETURN_HOME ,  LCD_SLOW_INSTR ) ;
 
     row = 0 ;
     column = 0 ;
@@ -262,10 +262,10 @@ void LCD_ClearScreen ( void )
 ********************************************************************/
 void LCD_CursorEnable ( bool enable ) {
     if (enable == true) {
-        LCD_SendCommand ( LCD_COMMAND_CURSOR_ON , LCD_S_INSTR ) ;
+        LCD_SendCommand ( LCD_COMMAND_CURSOR_ON , LCD_SLOW_INSTR ) ;
     }
     else {
-        LCD_SendCommand ( LCD_COMMAND_CURSOR_OFF , LCD_S_INSTR ) ;
+        LCD_SendCommand ( LCD_COMMAND_CURSOR_OFF , LCD_SLOW_INSTR ) ;
     }
 }
 
@@ -291,10 +291,10 @@ void LCD_CursorEnable ( bool enable ) {
 static void LCD_CarriageReturn ( void )
 {
     if (row == 0) {
-        LCD_SendCommand ( LCD_COMMAND_ROW_0_HOME , LCD_S_INSTR ) ;
+        LCD_SendCommand ( LCD_COMMAND_ROW_0_HOME , LCD_SLOW_INSTR ) ;
     }
     else {
-        LCD_SendCommand ( LCD_COMMAND_ROW_1_HOME , LCD_S_INSTR ) ;
+        LCD_SendCommand ( LCD_COMMAND_ROW_1_HOME , LCD_SLOW_INSTR ) ;
     }
     column = 0 ;
 }
@@ -316,11 +316,11 @@ static void LCD_ShiftCursorLeft ( void )
 
     if (column == 0) {
         if (row == 0) {
-            LCD_SendCommand ( LCD_COMMAND_ROW_1_HOME , LCD_S_INSTR ) ;
+            LCD_SendCommand ( LCD_COMMAND_ROW_1_HOME , LCD_SLOW_INSTR ) ;
             row = 1 ;
         }
         else {
-            LCD_SendCommand ( LCD_COMMAND_ROW_0_HOME , LCD_S_INSTR ) ;
+            LCD_SendCommand ( LCD_COMMAND_ROW_0_HOME , LCD_SLOW_INSTR ) ;
             row = 0 ;
         }
 
@@ -331,7 +331,7 @@ static void LCD_ShiftCursorLeft ( void )
     }
     else {
         column-- ;
-        LCD_SendCommand ( LCD_COMMAND_MOVE_CURSOR_LEFT , LCD_F_INSTR ) ;
+        LCD_SendCommand ( LCD_COMMAND_MOVE_CURSOR_LEFT , LCD_FAST_INSTR ) ;
     }
 }
 /*********************************************************************
@@ -347,17 +347,17 @@ static void LCD_ShiftCursorLeft ( void )
  *
  ********************************************************************/
 static void LCD_ShiftCursorRight ( void ) {
-    LCD_SendCommand ( LCD_COMMAND_MOVE_CURSOR_RIGHT , LCD_F_INSTR ) ;
+    LCD_SendCommand ( LCD_COMMAND_MOVE_CURSOR_RIGHT , LCD_FAST_INSTR ) ;
     column++ ;
 
     if (column == LCD_MAX_COLUMN) {
         column = 0 ;
         if (row == 0) {
-            LCD_SendCommand ( LCD_COMMAND_ROW_1_HOME , LCD_S_INSTR ) ;
+            LCD_SendCommand ( LCD_COMMAND_ROW_1_HOME , LCD_SLOW_INSTR ) ;
             row = 1 ;
         }
         else {
-            LCD_SendCommand ( LCD_COMMAND_ROW_0_HOME , LCD_S_INSTR ) ;
+            LCD_SendCommand ( LCD_COMMAND_ROW_0_HOME , LCD_SLOW_INSTR ) ;
             row = 0 ;
         }
     }

@@ -1,112 +1,231 @@
-/**
- * @file   HelloWorld3.c
- * @author JS
- *
- * @date 30.11.2017, 14:36
- *
- * @brief Getting started with a simple program (blinking LED)
- */
+/*******************************************************************************
+ Explorer 16 Demo Main File
 
+  Company:
+    Microchip Technology Inc.
 
+  File Name:
+    main.c
 
+  Summary:
+    Explorer 16 Demo Main File.
+
+  Description: 
+    This is the main file for the Explorer 16 Demo. It contains the main demo
+    flow and calls processor specific files for processor specific
+    implementations.
+ *******************************************************************************/
+
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright (c) 2013 released Microchip Technology Inc.  All rights reserved.
+
+Microchip licenses to you the right to use, modify, copy and distribute
+Software only when embedded on a Microchip microcontroller or digital signal
+controller that is integrated into your product or third party product
+(pursuant to the sublicense terms in the accompanying license agreement).
+
+You should refer to the license agreement accompanying this Software for
+additional information regarding your rights and obligations.
+
+SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
+MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
+IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
+CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
+OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
+INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
+CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
+SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
+(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
+ *******************************************************************************/
+// DOM-IGNORE-END
 
 // Check for Project Settings
 #ifndef __dsPIC33EP512MU810__
     #error "Wrong Controller"
 #endif
 
-/* ***********************
- * Includes
- * ***********************
- */
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
 
-#include "myxc.h"       //aus Projekt
-#include "onboardLeds.h"
-#include "onboardBtn.h"
-#include <stdint.h>     //Standard typedefs
+#include <stdio.h>
+#include <stdlib.h>
+#include <stddef.h>
 #include <stdbool.h>
-#include <string.h> 
+#include "app_data.h"
+
+#define ONE_VOLT 310
+#define ONE_TENTH_VOLT 31
+#define ONE_HUNDREDTH_VOLT 3
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: File Scope Variables and Functions
+// *****************************************************************************
+// *****************************************************************************
 
 
-/* ***********************
- * Defines
- * ***********************
+void Update_LCD ( void ) ;
+void SYS_Initialize ( void ) ;
+extern void Hex2Dec ( unsigned char ) ;
+
+
+APP_DATA appData = {
+                    .messageLine1 = "Explorer 16 Demo" ,
+                    .messageLine2 = "Press S3 to cont" ,
+                    .messageTime = "Time 00: 00: 00 " ,
+} ;
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Main Entry Point
+// *****************************************************************************
+// *****************************************************************************
+int main ( void )
+{
+
+
+    /* Call the System Intialize routine*/
+    SYS_Initialize ( ) ;
+
+    /* Display welcome message */
+    LCD_PutString ( (char*) &appData.messageLine1[0] , sizeof (appData.messageLine1 ) - 1  ) ;
+    LCD_PutString ( (char*) &appData.messageLine2[0] , sizeof (appData.messageLine2 ) - 1  ) ;
+
+    /* wait here until switch S3 is pressed */
+    while (! BUTTON_IsPressed ( BTN_ONB0 )) ;
+
+    /*Initialize Timer*/
+    TIMER_SetConfig ( TIMER_CONFIG_RTCC ) ;
+
+   
+    /* Display initial ADC and Timer messages */
+    LCD_PutString ( (char*) &appData.messageTime[0] , sizeof (appData.messageTime ) - 1 ) ;
+   
+
+
+
+    /* Infinite Loop */
+    while ( 1 )
+    {
+        /* check if time to update LCD with Timer data */
+        if ( appData.rtc_lcd_update )
+        {
+            Hex2Dec ( appData.hours ) ;
+            Update_LCD ( ) ;
+            appData.rtc_lcd_update = 0 ;
+
+           
+        }
+    } ;
+}
+/*******************************************************************************
+
+  Function:
+   void Update_LCD( void )
+
+  Summary:
+    Function to update LCD
+
+  Description:
+    This function will update the time on the LCD
+
+  Precondition:
+    None.
+
+  Parameters:
+    None.
+
+  Returns:
+    None.
+
+  Remarks:
+
  */
+/******************************************************************************/
+void Update_LCD ( void )
+{
+    LCD_PutChar ( 'T' ) ;
+    LCD_PutChar ( 'i' ) ;
+    LCD_PutChar ( 'm' ) ;
+    LCD_PutChar ( 'e' ) ;
+    LCD_PutChar ( ' ' ) ;
+    LCD_PutChar ( appData.tens + 0x30 ) ;
+    LCD_PutChar ( appData.ones + 0x30 ) ;
 
-/* Substitute for stdlib.h */
-#define	EXIT_SUCCESS	0
-#define	EXIT_FAILURE	1
+    Hex2Dec ( appData.minutes ) ;
+    LCD_PutChar ( ':' ) ;
+    LCD_PutChar ( ' ' ) ;
+    LCD_PutChar ( appData.tens + 0x30 ) ;
+    LCD_PutChar ( appData.ones + 0x30 ) ;
 
-    
-
-
-
-/* ***********************
- * Prototypes
- * ***********************
- */
-
-void delay_ms(uint16_t u16milliseconds);      //Funktionsdeklaration
-
-
-/* ***********************
- * Function definitions
- * ***********************
- */
-
-/**
- * @brief Provides u16milliseconds delay
- * @param u16milliseconds Delay in milliseconds
- * @details u16milliseconds=0 causes 65536 ms delay
- * @pre 8.00 MHz (External Oscillator without PLL), e. g.: <br>
- * _FOSCSEL(FNOSC_PRI); //External Oscillator: Primary  <br>
- * _FOSC(POSCMD_XT);  //Primary Oscillator Enabled: XT Crystal Oscillator Mode  <br>
- * s. 8.00 MHz DS70216C-page 39-19 <br>
- * @attention Code has to be changed if a different oscillator frequency is used.
- 
-void delay_ms(uint16_t u16milliseconds){        //Funktionsdefinition
-    uint16_t ui16_i=0;
-    while(u16milliseconds){
-        for (ui16_i=0;ui16_i<358;ui16_i++){    //1 ms delay loop
-            __asm__ volatile("nop \n\t"        //Assembler-Code
-                             "nop \n\t"
-                             "nop \n\t");
-        }//for
-        u16milliseconds--;
-    }//while
+    Hex2Dec ( appData.seconds ) ;
+    LCD_PutChar ( ':' ) ;
+    LCD_PutChar ( ' ' ) ;
+    LCD_PutChar ( appData.tens + 0x30 ) ;
+    LCD_PutChar ( appData.ones + 0x30 ) ;
 
 }
- * */
 
-/* ***********************
- * Main
- * ***********************
+
+/*******************************************************************************
+
+  Function:
+   void Hex2Dec ( unsigned char )
+
+  Summary:
+    Explorer 16 Demo Hex to Decimal Conversion File
+
+  Description:
+     This is the file for the Explorer 16 Dem that converts the hexadecimal data
+    into decimal format.
+
+  Precondition:
+    None.
+
+  Parameters:
+    None.
+
+  Returns:
+    None.
+
+  Remarks:
+
  */
+/******************************************************************************/
 
+void Hex2Dec ( unsigned char count )
+{
+    /* reset values */
+    appData.hunds = 0 ;
+    appData.tens  = 0 ;
+    appData.ones = 0 ;
 
-/**
- * Hello World (Blinking LED)
- * @brief Toggles LED200 with 1 Hz, 1:1 duty cycle
- * @pre CPU clock frequency = 8.00« MHz
- */
-int main() {
-    
-  
-    LED_On(LED_ONB1);
-    LED_On(LED_ONB3);
+    while ( count >= 10 )
+    {
 
-    /* Endless Loop */
-    while(1){
-        
-        LED_Toggle(LED_ONB0);
-        LED_Toggle(LED_ONB1);
-        LED_Toggle(LED_ONB2);
-        LED_Toggle(LED_ONB3);
-        
-        delay_ms(500); 
-        
+        if ( count >= 200 )
+        {
+            count -= 200 ;
+            appData.hunds = 0x02 ;
+        }
 
-    }//while
+        if (count >= 100)
+        {
+            count -= 100 ;
+            appData.hunds++ ;
+        }
 
-    return (EXIT_SUCCESS);  //never reached
-} //main()
+        if (count >= 10 )
+        {
+            count -= 10 ;
+            appData.tens++ ;
+        }
+    }
+
+    appData.ones = count ;
+}
