@@ -63,7 +63,7 @@ void delay_ms(uint16_t u16milliseconds);      //Funktionsdeklaration
  * _FOSC(POSCMD_XT);  //Primary Oscillator Enabled: XT Crystal Oscillator Mode  <br>
  * s. 8.00 MHz DS70216C-page 39-19 <br>
  * @attention Code has to be changed if a different oscillator frequency is used.
- */
+ 
 void delay_ms(uint16_t u16milliseconds){        //Funktionsdefinition
     uint16_t ui16_i=0;
     while(u16milliseconds){
@@ -76,6 +76,7 @@ void delay_ms(uint16_t u16milliseconds){        //Funktionsdefinition
     }//while
 
 }
+ * */
 
 /* ***********************
  * Main
