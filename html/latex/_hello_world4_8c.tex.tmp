@@ -1,0 +1,151 @@
+\hypertarget{_hello_world4_8c}{}\section{C\+:/\+Users/00670/\+Documents/\+Hochschule/\+\_\+\+Tier1/73304\+\_\+\+Technische\+Informatik/\+Code/\+Hello\+World4.X/\+Hello\+World4.c File Reference}
+\label{_hello_world4_8c}\index{C\+:/\+Users/00670/\+Documents/\+Hochschule/\+\_\+\+Tier1/73304\+\_\+\+Technische\+Informatik/\+Code/\+Hello\+World4.\+X/\+Hello\+World4.\+c@{C\+:/\+Users/00670/\+Documents/\+Hochschule/\+\_\+\+Tier1/73304\+\_\+\+Technische\+Informatik/\+Code/\+Hello\+World4.\+X/\+Hello\+World4.\+c}}
+{\ttfamily \#include \char`\"{}myxc.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+Include dependency graph for Hello\+World4.\+c\+:
+% FIG 0
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_hello_world4_8c_a687984f47d8cce148d1b914d2b79612a}{E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS}~0
+\item 
+\#define \hyperlink{_hello_world4_8c_a73efe787c131b385070f25d18b7c9aa4}{E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+RE}~1
+\item 
+\#define \hyperlink{_hello_world4_8c_aaed48328fea330837de1d541b695670d}{\+\_\+\+L\+E\+D200}~L\+A\+T\+Bbits.\+L\+A\+T\+B8
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{_hello_world4_8c_a6c2d68361d4f6f99cb99596fd9b9690c}{delay\+\_\+ms} (uint16\+\_\+t u16milliseconds)
+\begin{DoxyCompactList}\small\item\em Provides u16milliseconds delay. \end{DoxyCompactList}\item 
+int \hyperlink{_hello_world4_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{main} ()
+\begin{DoxyCompactList}\small\item\em Toggles L\+E\+D200 with 1 Hz, 1\+:1 duty cycle. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{_hello_world4_8c_aaed48328fea330837de1d541b695670d}\label{_hello_world4_8c_aaed48328fea330837de1d541b695670d}} 
+\index{Hello\+World4.\+c@{Hello\+World4.\+c}!\+\_\+\+L\+E\+D200@{\+\_\+\+L\+E\+D200}}
+\index{\+\_\+\+L\+E\+D200@{\+\_\+\+L\+E\+D200}!Hello\+World4.\+c@{Hello\+World4.\+c}}
+\subsubsection{\texorpdfstring{\+\_\+\+L\+E\+D200}{\_LED200}}
+{\footnotesize\ttfamily \#define \+\_\+\+L\+E\+D200~L\+A\+T\+Bbits.\+L\+A\+T\+B8}
+
+
+
+Definition at line 37 of file Hello\+World4.\+c.
+
+\mbox{\Hypertarget{_hello_world4_8c_a73efe787c131b385070f25d18b7c9aa4}\label{_hello_world4_8c_a73efe787c131b385070f25d18b7c9aa4}} 
+\index{Hello\+World4.\+c@{Hello\+World4.\+c}!E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+RE@{E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+RE}}
+\index{E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+RE@{E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+RE}!Hello\+World4.\+c@{Hello\+World4.\+c}}
+\subsubsection{\texorpdfstring{E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+RE}{EXIT\_FAILURE}}
+{\footnotesize\ttfamily \#define E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+RE~1}
+
+
+
+Definition at line 34 of file Hello\+World4.\+c.
+
+\mbox{\Hypertarget{_hello_world4_8c_a687984f47d8cce148d1b914d2b79612a}\label{_hello_world4_8c_a687984f47d8cce148d1b914d2b79612a}} 
+\index{Hello\+World4.\+c@{Hello\+World4.\+c}!E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS@{E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS}}
+\index{E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS@{E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS}!Hello\+World4.\+c@{Hello\+World4.\+c}}
+\subsubsection{\texorpdfstring{E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS}{EXIT\_SUCCESS}}
+{\footnotesize\ttfamily \#define E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS~0}
+
+
+
+Definition at line 33 of file Hello\+World4.\+c.
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{_hello_world4_8c_a6c2d68361d4f6f99cb99596fd9b9690c}\label{_hello_world4_8c_a6c2d68361d4f6f99cb99596fd9b9690c}} 
+\index{Hello\+World4.\+c@{Hello\+World4.\+c}!delay\+\_\+ms@{delay\+\_\+ms}}
+\index{delay\+\_\+ms@{delay\+\_\+ms}!Hello\+World4.\+c@{Hello\+World4.\+c}}
+\subsubsection{\texorpdfstring{delay\+\_\+ms()}{delay\_ms()}}
+{\footnotesize\ttfamily void delay\+\_\+ms (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{u16milliseconds }\end{DoxyParamCaption})}
+
+
+
+Provides u16milliseconds delay. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em u16milliseconds} & Delay in milliseconds\\
+\hline
+\end{DoxyParams}
+u16milliseconds=0 causes 65536 ms delay \begin{DoxyPrecond}{Precondition}
+7.\+37 M\+Hz (Internal Fast RC), e. g.\+: ~\newline
+ \hyperlink{p33_e_p512_m_u810_8h_a476dc13664037647093609ee08fab219}{\+\_\+\+F\+O\+S\+C\+S\+E\+L(\+F\+N\+O\+S\+C\+\_\+\+F\+R\+C)}; //\+Initial Oscillator\+: Internal Fast RC ~\newline
+ \hyperlink{p33_e_p512_m_u810_8h_a3b72a7757ab208ee35d0398426a4bca0}{\+\_\+\+F\+O\+S\+C(\+P\+O\+S\+C\+M\+D\+\_\+\+N\+O\+N\+E)}; //\+Primary Oscillator disabled (quartz not used) ~\newline
+ s. 7.\+37 M\+Hz D\+S70216\+C-\/page 39-\/19 ~\newline
+ 
+\end{DoxyPrecond}
+\begin{DoxyAttention}{Attention}
+Code has to be changed if a different oscillator frequency is used. 
+\end{DoxyAttention}
+
+
+Definition at line 61 of file Hello\+World4.\+c.
+
+
+\begin{DoxyCode}
+61                                        \{
+62     uint16\_t ui16\_i=0;
+63     \textcolor{keywordflow}{while}(u16milliseconds)\{
+64         \textcolor{keywordflow}{for} (ui16\_i=0;ui16\_i<331;ui16\_i++)\{    \textcolor{comment}{//1 ms delay loop}
+65             \_\_asm\_\_ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"nop \(\backslash\)n\(\backslash\)t"}
+66                              \textcolor{stringliteral}{"nop \(\backslash\)n\(\backslash\)t"}
+67                              \textcolor{stringliteral}{"nop \(\backslash\)n\(\backslash\)t"});
+68         \}\textcolor{comment}{//for}
+69         u16milliseconds--;
+70     \}\textcolor{comment}{//while}
+71 
+72 \}
+\end{DoxyCode}
+Here is the caller graph for this function\+:
+% FIG 1
+\mbox{\Hypertarget{_hello_world4_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{_hello_world4_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}} 
+\index{Hello\+World4.\+c@{Hello\+World4.\+c}!main@{main}}
+\index{main@{main}!Hello\+World4.\+c@{Hello\+World4.\+c}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Toggles L\+E\+D200 with 1 Hz, 1\+:1 duty cycle. 
+
+Hello World (Blinking L\+ED) \begin{DoxyPrecond}{Precondition}
+C\+PU clock frequency = 7.\+37 M\+Hz 
+\end{DoxyPrecond}
+
+
+Definition at line 84 of file Hello\+World4.\+c.
+
+
+\begin{DoxyCode}
+84            \{
+85 
+86 
+87     \textcolor{comment}{/* Port Configurations */}
+88     \textcolor{comment}{// DS70616G-page 209}
+89     \textcolor{comment}{// ODCB (open drain config) unimplemented (DS70616G, Table 4-56)}
+90     ANSELBbits.ANSB8=0;     \textcolor{comment}{//Digital I/O}
+91     CNENBbits.CNIEB8=0;     \textcolor{comment}{//Disable change notification interrupt}
+92     CNPUBbits.CNPUB8=0;     \textcolor{comment}{//Disable weak pullup}
+93     CNPDBbits.CNPDB8=0;     \textcolor{comment}{//Disable weak pulldown}
+94     TRISBbits.TRISB8=0;     \textcolor{comment}{//Pin B8: Digital Output}
+95     LATBbits.LATB8=0;       \textcolor{comment}{//Pin B8: Low}
+96 
+97 
+98 
+99     \textcolor{comment}{/* Endless Loop */}
+100     \textcolor{keywordflow}{while}(1)\{
+101         \textcolor{comment}{/* LATBbits.LATB8 = !(LATBbits.LATB8); //Toggle Pin B8 */}
+102         \hyperlink{_hello_world4_8c_aaed48328fea330837de1d541b695670d}{\_LED200}=!\hyperlink{_hello_world4_8c_aaed48328fea330837de1d541b695670d}{\_LED200}; \textcolor{comment}{//Toggle LED}
+103         \hyperlink{_hello_world4_8c_a6c2d68361d4f6f99cb99596fd9b9690c}{delay\_ms}(500);
+104     \}\textcolor{comment}{//while}
+105     
+106     \textcolor{keywordflow}{return} (\hyperlink{_hello_world4_8c_a687984f47d8cce148d1b914d2b79612a}{EXIT\_SUCCESS});  \textcolor{comment}{//never reached}
+107 \} \textcolor{comment}{//main()}
+\end{DoxyCode}
+Here is the call graph for this function\+:
+% FIG 2

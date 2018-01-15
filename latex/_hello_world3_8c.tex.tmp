@@ -1,0 +1,123 @@
+\hypertarget{_hello_world3_8c}{}\section{Hello\+World3.\+c File Reference}
+\label{_hello_world3_8c}\index{Hello\+World3.\+c@{Hello\+World3.\+c}}
+
+
+Getting started with a simple program (blinking L\+E\+D)  
+
+
+{\ttfamily \#include $<$xc.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$stdbool.\+h$>$}\\*
+Include dependency graph for Hello\+World3.\+c\+:
+% FIG 0
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_hello_world3_8c_a687984f47d8cce148d1b914d2b79612a}{E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S}~0
+\item 
+\#define \hyperlink{_hello_world3_8c_a73efe787c131b385070f25d18b7c9aa4}{E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+R\+E}~1
+\item 
+\#define \hyperlink{_hello_world3_8c_aaed48328fea330837de1d541b695670d}{\+\_\+\+L\+E\+D200}~L\+A\+T\+Bbits.\+L\+A\+T\+B8
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{_hello_world3_8c_a6c2d68361d4f6f99cb99596fd9b9690c}{delay\+\_\+ms} (uint16\+\_\+t u16milliseconds)
+\begin{DoxyCompactList}\small\item\em Provides u16milliseconds delay. \end{DoxyCompactList}\item 
+int \hyperlink{_hello_world3_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{main} ()
+\begin{DoxyCompactList}\small\item\em Toggles L\+E\+D200 with 1 Hz, 1\+:1 duty cycle. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Getting started with a simple program (blinking L\+E\+D) 
+
+\begin{DoxyAuthor}{Author}
+J\+S
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+29.\+08.\+2017, 16\+:39 
+\end{DoxyDate}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{_hello_world3_8c_aaed48328fea330837de1d541b695670d}{}\index{Hello\+World3.\+c@{Hello\+World3.\+c}!\+\_\+\+L\+E\+D200@{\+\_\+\+L\+E\+D200}}
+\index{\+\_\+\+L\+E\+D200@{\+\_\+\+L\+E\+D200}!Hello\+World3.\+c@{Hello\+World3.\+c}}
+\subsubsection[{\+\_\+\+L\+E\+D200}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+L\+E\+D200~L\+A\+T\+Bbits.\+L\+A\+T\+B8}\label{_hello_world3_8c_aaed48328fea330837de1d541b695670d}
+
+
+Definition at line 53 of file Hello\+World3.\+c.
+
+\hypertarget{_hello_world3_8c_a73efe787c131b385070f25d18b7c9aa4}{}\index{Hello\+World3.\+c@{Hello\+World3.\+c}!E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+R\+E@{E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+R\+E}}
+\index{E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+R\+E@{E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+R\+E}!Hello\+World3.\+c@{Hello\+World3.\+c}}
+\subsubsection[{E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+R\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+R\+E~1}\label{_hello_world3_8c_a73efe787c131b385070f25d18b7c9aa4}
+
+
+Definition at line 50 of file Hello\+World3.\+c.
+
+\hypertarget{_hello_world3_8c_a687984f47d8cce148d1b914d2b79612a}{}\index{Hello\+World3.\+c@{Hello\+World3.\+c}!E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S@{E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S}}
+\index{E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S@{E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S}!Hello\+World3.\+c@{Hello\+World3.\+c}}
+\subsubsection[{E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S~0}\label{_hello_world3_8c_a687984f47d8cce148d1b914d2b79612a}
+
+
+Definition at line 49 of file Hello\+World3.\+c.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{_hello_world3_8c_a6c2d68361d4f6f99cb99596fd9b9690c}{}\index{Hello\+World3.\+c@{Hello\+World3.\+c}!delay\+\_\+ms@{delay\+\_\+ms}}
+\index{delay\+\_\+ms@{delay\+\_\+ms}!Hello\+World3.\+c@{Hello\+World3.\+c}}
+\subsubsection[{delay\+\_\+ms(uint16\+\_\+t u16milliseconds)}]{\setlength{\rightskip}{0pt plus 5cm}void delay\+\_\+ms (
+\begin{DoxyParamCaption}
+\item[{uint16\+\_\+t}]{u16milliseconds}
+\end{DoxyParamCaption}
+)}\label{_hello_world3_8c_a6c2d68361d4f6f99cb99596fd9b9690c}
+
+
+Provides u16milliseconds delay. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em u16milliseconds} & Delay in milliseconds\\
+\hline
+\end{DoxyParams}
+u16milliseconds=0 causes 65536 ms delay \begin{DoxyPrecond}{Precondition}
+7.\+37 M\+Hz (Internal Fast R\+C), e. g.\+: ~\newline
+ \+\_\+\+F\+O\+S\+C\+S\+E\+L(\+F\+N\+O\+S\+C\+\_\+\+F\+R\+C); //\+Initial Oscillator\+: Internal Fast R\+C ~\newline
+ \+\_\+\+F\+O\+S\+C(\+P\+O\+S\+C\+M\+D\+\_\+\+N\+O\+N\+E); //\+Primary Oscillator disabled (quartz not used) ~\newline
+ s. 7.\+37 M\+Hz D\+S70216\+C-\/page 39-\/19 ~\newline
+ 
+\end{DoxyPrecond}
+\begin{DoxyAttention}{Attention}
+Code has to be changed if a different oscillator frequency is used. 
+\end{DoxyAttention}
+
+
+Definition at line 77 of file Hello\+World3.\+c.
+
+
+
+Here is the caller graph for this function\+:
+% FIG 1
+
+
+\hypertarget{_hello_world3_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{}\index{Hello\+World3.\+c@{Hello\+World3.\+c}!main@{main}}
+\index{main@{main}!Hello\+World3.\+c@{Hello\+World3.\+c}}
+\subsubsection[{main()}]{\setlength{\rightskip}{0pt plus 5cm}int main (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{_hello_world3_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}
+
+
+Toggles L\+E\+D200 with 1 Hz, 1\+:1 duty cycle. 
+
+Hello World (Blinking L\+E\+D) 
+
+Definition at line 99 of file Hello\+World3.\+c.
+
+
+
+Here is the call graph for this function\+:
+% FIG 2
+
+
