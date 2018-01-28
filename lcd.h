@@ -1,45 +1,33 @@
-/* Microchip Technology Inc. and its subsidiaries.  You may use this software 
- * and any derivatives exclusively with Microchip products. 
- * 
- * THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS".  NO WARRANTIES, WHETHER 
- * EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED 
- * WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A 
- * PARTICULAR PURPOSE, OR ITS INTERACTION WITH MICROCHIP PRODUCTS, COMBINATION 
- * WITH ANY OTHER PRODUCTS, OR USE IN ANY APPLICATION. 
- *
- * IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
- * INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
- * WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS 
- * BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE.  TO THE 
- * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS 
- * IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF 
- * ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
- *
- * MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE 
- * TERMS. 
- */
+/*******************************************************************************
+Copyright 2016 Microchip Technology Inc. (www.microchip.com)
 
-/* 
- * File:    lcd.h 
- * Author:  Christina Rost    / Team1
- * Comments:
- * Revision history: 
- */
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-#include <stdbool.h>
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*******************************************************************************/
+
 #include <stdint.h>
-
+#include <stdbool.h>
 
 /*********************************************************************
 * Function: bool LCD_Initialize(void);
 *
-* Overview: Initializes the LCD screen.  
+* Overview: Initializes the LCD screen.  Can take several hundred
+*           milliseconds.
 *
 * PreCondition: none
 *
 * Input: None
 *
-* Output: true if successful, false if not
+* Output: true if successful, false otherwise
 *
 ********************************************************************/
 bool LCD_Initialize(void);
@@ -48,10 +36,10 @@ bool LCD_Initialize(void);
 * Function: void LCD_PutString(char* inputString, uint16_t length);
 *
 * Overview: Puts a string on the LCD screen.  Unsupported characters will be
-*           discarded.  If Lcd is not ready or buffer space not available 
-*          characters are blocked or thrown away
-*          if null terminator (0x00) is reached ir the length number of 
-*          characters is printed it will terminate
+*           discarded.  May block or throw away characters is LCD is not ready
+*           or buffer space is not available.  Will terminate when either a
+*           null terminator character (0x00) is reached or the length number
+*           of characters is printed, which ever comes first.
 *
 * PreCondition: already initialized via LCD_Initialize()
 *
@@ -61,7 +49,6 @@ bool LCD_Initialize(void);
 * Output: None
 *
 ********************************************************************/
-
 void LCD_PutString(char* inputString, uint16_t length);
 
 /*********************************************************************
@@ -69,9 +56,7 @@ void LCD_PutString(char* inputString, uint16_t length);
 *
 * Overview: Puts a character on the LCD screen.  Unsupported characters will be
 *           discarded.  May block or throw away characters is LCD is not ready
-*           or buffer space is not available. Will terminate when null 
-*           terminator character (0x00) is reached or the length number of 
-*           characters is printed.
+*           or buffer space is not available.
 *
 * PreCondition: already initialized via LCD_Initialize()
 *
@@ -99,7 +84,7 @@ void LCD_ClearScreen(void);
 /*********************************************************************
 * Function: void LCD_CursorEnable(bool enable)
 *
-* Overview: Enables/disables cursor
+* Overview: Enables/disables the cursor
 *
 * PreCondition: None
 *
@@ -109,5 +94,3 @@ void LCD_ClearScreen(void);
 *
 ********************************************************************/
 void LCD_CursorEnable(bool enable);
-
-

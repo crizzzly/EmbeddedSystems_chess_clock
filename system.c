@@ -14,7 +14,7 @@
 #include <xc.h>
 #include "app_data.h"
 #include "myxc.h"
-
+#include "digitalIO.h"
 // ****************************************************************************
 // ****************************************************************************
 // Section: File Scope Functions
@@ -76,20 +76,17 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _MathError ( void ) ;
 void SYS_Initialize ( void )
 {
     /* Enable LEDs*/
-    LED_Enable ( LED_ONB0 ) ;
-    LED_Enable ( LED_ONB1) ;
-    LED_Enable ( LED_ONB2 ) ;
-    LED_Enable ( LED_ONB3) ;
+    pinMode(LED200, OUTPUT);
+    pinMode(LED201, OUTPUT);
+    pinMode(LED202, OUTPUT);
+    pinMode(LED203, OUTPUT);
     
-    /* Turn On LEDs*/
-    LED_On ( LED_ONB0 ) ;
-    LED_On ( LED_ONB2 ) ;
+    pinMode(BTN200, INPUT);
+    pinMode(BTN201, INPUT);
+    pinMode(BTN202, INPUT);
+    pinMode(BTN203, INPUT);
 
-    /* Enable Switch S3*/
-    BUTTON_Enable ( BTN_ONB0 ) ;
-
-    /* Enable ADC to the Potentiometer channel */ 
-     
+        
 
     /* Initialize LCD*/
     PRINT_SetConfiguration ( PRINT_CONFIGURATION_LCD ) ;
@@ -171,7 +168,7 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _T1Interrupt ( void )
     appData.rtc_lcd_update = 1 ;
 
     /* Toggle LED at 1 Hz rate */
-    LED_Toggle ( LED_ONB0 ) ;
+    //LED_Toggle ( LED_ONB0 ) ;
 
     /* reset Timer 1 interrupt flag */
     IFS0bits.T1IF = 0 ;

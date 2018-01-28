@@ -20,6 +20,27 @@
 #define LED_ONB2_TRIS TRISBbits.TRISB10
 #define LED_ONB3_TRIS TRISBbits.TRISB11
 
+#define LED_ONB0_ANSEL ANSELBbits.ANSB8
+#define LED_ONB1_ANSEL ANSELBbits.ANSB9
+#define LED_ONB2_ANSEL ANSELBbits.ANSB10
+#define LED_ONB3_ANSEL ANSELBbits.ANSB11
+
+#define LED_ONB0_CNEN CNENBbits.CNIEB8
+#define LED_ONB1_CNEN CNENBbits.CNIEB9
+#define LED_ONB2_CNEN CNENBbits.CNIEB10
+#define LED_ONB3_CNEN CNENBbits.CNIEB11
+
+
+#define LED_ONB0_CNPU CNPUBbits.CNPUB8
+#define LED_ONB1_CNPU CNPUBbits.CNPUB9
+#define LED_ONB2_CNPU CNPUBbits.CNPUB10
+#define LED_ONB3_CNPU CNPUBbits.CNPUB11
+
+#define LED_ONB0_CNPD CNPDBbits.CNPDB8 
+#define LED_ONB1_CNPD CNPDBbits.CNPDB9 
+#define LED_ONB2_CNPD CNPDBbits.CNPDB10
+#define LED_ONB3_CNPD CNPDBbits.CNPDB11
+
 #define LED_ON  1
 #define LED_OFF 0
 
@@ -190,15 +211,27 @@ void LED_Enable(LED led){
     switch (led){
         case LED_ONB0:
             LED_ONB0_TRIS = OUTPUT ;
+            LED_ONB0_CNEN = 0;
+            LED_ONB0_CNPU = 0;
+            LED_ONB0_CNPD = 0;
             break;
         case LED_ONB1:
             LED_ONB1_TRIS = OUTPUT ;
+            LED_ONB1_CNEN = 0;
+            LED_ONB1_CNPU = 0;
+            LED_ONB1_CNPD = 0;
             break;
         case LED_ONB2:
             LED_ONB2_TRIS = OUTPUT ;
+            LED_ONB2_CNEN = 0;
+            LED_ONB2_CNPU = 0;
+            LED_ONB2_CNPD = 0;
             break;
         case LED_ONB3:
             LED_ONB3_TRIS = OUTPUT ;
+            LED_ONB3_CNEN = 0;
+            LED_ONB3_CNPU = 0;
+            LED_ONB3_CNPD = 0;
             break;
         case LED_NONE:
             break;

@@ -62,6 +62,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define ONE_TENTH_VOLT 31
 #define ONE_HUNDREDTH_VOLT 3
 
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: File Scope Variables and Functions
@@ -75,10 +76,17 @@ extern void Hex2Dec ( unsigned char ) ;
 
 
 APP_DATA appData = {
-                    .messageLine1 = "Explorer 16 Demo" ,
-                    .messageLine2 = "Press S3 to cont" ,
-                    .messageTime = "Time 00: 00: 00 " ,
+                    .messageLine1 = "Chess Clock IoT3" ,
+                    .messageLine2 = "Press Btn0 \n"  ,
+                    .messageTime1 = "player 1 \n" ,
+                    .messageTime2 = "Pl2 00: 00: 00   ",
+                    .message1     = "button 1 pressed\n"
+                            
+                            
+                            
 } ;
+
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -88,40 +96,63 @@ APP_DATA appData = {
 int main ( void )
 {
 
-
-    /* Call the System Intialize routine*/
     SYS_Initialize ( ) ;
-
-    /* Display welcome message */
-    LCD_PutString ( (char*) &appData.messageLine1[0] , sizeof (appData.messageLine1 ) - 1  ) ;
-    LCD_PutString ( (char*) &appData.messageLine2[0] , sizeof (appData.messageLine2 ) - 1  ) ;
-
-    /* wait here until switch S3 is pressed */
-    while (! BUTTON_IsPressed ( BTN_ONB0 )) ;
-
-    /*Initialize Timer*/
-    TIMER_SetConfig ( TIMER_CONFIG_RTCC ) ;
-
-   
-    /* Display initial ADC and Timer messages */
-    LCD_PutString ( (char*) &appData.messageTime[0] , sizeof (appData.messageTime ) - 1 ) ;
-   
-
-
-
-    /* Infinite Loop */
-    while ( 1 )
-    {
-        /* check if time to update LCD with Timer data */
-        if ( appData.rtc_lcd_update )
-        {
-            Hex2Dec ( appData.hours ) ;
-            Update_LCD ( ) ;
-            appData.rtc_lcd_update = 0 ;
-
-           
+    
+    while (1){
+        if (digitalRead(BTN200)){
+            LCD_PutString ( (char*) &appData.message1[0] , sizeof (appData.message1 ) - 1 ) ;
+            digitalWrite(LED200, 1);
         }
-    } ;
+        if (digitalRead(BTN201)){
+            LCD_PutString ( (char*) &appData.message1[0] , sizeof (appData.message1 ) - 1 ) ;
+            digitalWrite(LED201, 1);
+        }
+        if (digitalRead(BTN202)){
+            LCD_PutString ( (char*) &appData.message1[0] , sizeof (appData.message1 ) - 1 ) ;
+            digitalWrite(LED202, 1);
+        }
+        if (digitalRead(BTN203)){
+            LCD_PutString ( (char*) &appData.message1[0] , sizeof (appData.message1 ) - 1 ) ;
+            digitalWrite(LED203, 1);
+        }
+    }
+
+//    
+//    /* Display welcome message */
+//    LCD_PutString ( (char*) &appData.messageLine1[0] , sizeof (appData.messageLine1 ) - 1  ) ;
+//    LCD_PutString ( (char*) &appData.messageLine2[0] , sizeof (appData.messageLine2 ) - 1  ) ;
+//    
+//    if(BUTTON_IsPressed(BTN_ONB0)) LED_Toggle(LED_ONB0);
+//    /* wait here until switch S3 is pressed */
+//    while (! BUTTON_IsPressed ( BTN_ONB0 ));
+//
+//    /*Initialize Timer*/
+//    TIMER_SetConfig ( TIMER_CONFIG_RTCC ) ;
+//
+//   
+//    /* Display initial ADC and Timer messages */
+//    LCD_PutString ( (char*) &appData.messageTime1[0] , sizeof (appData.messageTime1 ) - 1 ) ;
+//    LCD_PutString ( (char*) &appData.messageTime2[0] , sizeof (appData.messageTime2 ) - 1 ) ;
+//
+//   
+//
+//
+//
+//        /* Infinite Loop */
+//    while ( 1 )
+//    {
+//        LCD_PutString ( (char*) &appData.messageLine2[0] , sizeof (appData.messageLine2 ) - 1  ) ;
+//        /* check if time to update LCD with Timer data */
+//        if ( appData.rtc_lcd_update )
+//        {
+//            Hex2Dec ( appData.hours ) ;
+//            Update_LCD ( ) ;
+//            appData.rtc_lcd_update = 0 ;
+//        }
+//
+//
+//    } 
+    
 }
 /*******************************************************************************
 
@@ -147,8 +178,7 @@ int main ( void )
 
  */
 /******************************************************************************/
-void Update_LCD ( void )
-{
+void Update_LCD ( void ){
     LCD_PutChar ( 'T' ) ;
     LCD_PutChar ( 'i' ) ;
     LCD_PutChar ( 'm' ) ;
@@ -168,6 +198,7 @@ void Update_LCD ( void )
     LCD_PutChar ( ' ' ) ;
     LCD_PutChar ( appData.tens + 0x30 ) ;
     LCD_PutChar ( appData.ones + 0x30 ) ;
+    LCD_PutChar ( ' ' ) ;
 
 }
 

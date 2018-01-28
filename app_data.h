@@ -38,9 +38,8 @@
  * Revision history: 
  */
 
-#include "onboardLEDs.h"
+#include "digitalIO.h"
 #include "lcd.h"
-#include "onboardBtn.h"
 #include "timer.h"
 #include "print_lcd.h"
 //#include "myxc.h"
@@ -79,7 +78,11 @@ typedef struct
     /*arrays used for Explorer 16 LCD display*/
     char messageLine1[18] ;
     char messageLine2[18]  ;
-    char messageTime[18] ;
+    char messageTime1[18] ;
+    char messageTime2[18] ;
+    char message1[18] ;
+
+
 
 } APP_DATA ;
 

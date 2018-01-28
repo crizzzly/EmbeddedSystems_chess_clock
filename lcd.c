@@ -1,73 +1,66 @@
-/*
- * File:   lcd.c
- * Author: chrissi
- *
- * Created on January 15, 2018, 3:52 AM
- */
+/*******************************************************************************
+Copyright 2016 Microchip Technology Inc. (www.microchip.com)
 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*******************************************************************************/
 
 #include <xc.h>
 #include "lcd.h"
 #include <stdint.h>
 
-/* private definitions +++++++++++++++++++++++++++++++++++*/
-//define fast instruction time in terms of loop time 
-#define LCD_FAST_INSTR      2000
+#ifndef SYSTEM_PERIPHERAL_CLOCK
+#define SYSTEM_PERIPHERAL_CLOCK (7370000/2)
+//#pragma message "This module requires a definition for the peripheral clock frequency.  Assuming 7.37MHz Fcy (7.37MHz Fosc).  Define value if this is not correct."
+#endif
 
-//define slow instruction time
-#define LCD_SLOW_INSTR      6000
+/* This defines the number of cycles per loop through the delay routine.  Spans
+ * between 12-18 depending on optimization mode.*/
+#define CYCLES_PER_DELAY_LOOP 12
 
-//define lcd startup time
-#define LCD_STARTUP         50000
+/* Private Definitions ***********************************************/
 
-//characters per line
+/* Define a delay for the various time intervals required between various signal
+ * transitions (E pulse, R/W setup, etc.).  This will be rounded up to 1us for 
+ * the sake of easy calculation though all of these are less than that
+ * typically 60-300ns. */
+#define LCD_SIGNAL_TIMING         (((SYSTEM_PERIPHERAL_CLOCK/1000)*1)/1000)/CYCLES_PER_DELAY_LOOP
+
+// Define a fast instruction execution time in terms of loop time
+// typically > 40us
+#define LCD_F_INSTR         (((SYSTEM_PERIPHERAL_CLOCK/1000)*40)/1000)/CYCLES_PER_DELAY_LOOP
+
+// Define a slow instruction execution time in terms of loop time
+// typically > 1.64ms
+#define LCD_S_INSTR         (((SYSTEM_PERIPHERAL_CLOCK/1000)*1640)/1000)/CYCLES_PER_DELAY_LOOP
+
+// Define the startup time for the LCD in terms of loop time
+// typically > 60ms (double than 8 bit mode)
+#define LCD_STARTUP         (((SYSTEM_PERIPHERAL_CLOCK/1000)*60000)/1000)/CYCLES_PER_DELAY_LOOP
+
 #define LCD_MAX_COLUMN      16
 
-#define LCD_SendData(data) { PMADDR = 0x0001; PMDIN1 = data; LCD_Wait(LCD_FAST_INSTR); }
+#define LCD_SendData(data) { PMADDR = 0x0001; PMDIN1 = data; LCD_Wait(LCD_F_INSTR); }
 #define LCD_SendCommand(command, delay) { PMADDR = 0x0000; PMDIN1 = command; LCD_Wait(delay); }
-#define LCD_COMMAND_CLEAR_SCREEN        0x01    //0000 0001
-#define LCD_COMMAND_RETURN_HOME         0x02    //0000 0010
-#define LCD_COMMAND_ENTER_DATA_MODE     0x06    //0000 0110
-#define LCD_COMMAND_CURSOR_OFF          0x0C    //0000 1100
-#define LCD_COMMAND_CURSOR_ON           0x0F    //0000 1111
-#define LCD_COMMAND_MOVE_CURSOR_LEFT    0x10    //0001 0000
-#define LCD_COMMAND_MOVE_CURSOR_RIGHT   0x14    //0001 0100
-#define LCD_COMMAND_SET_MODE_8_BIT      0x38    //0011 1000
-#define LCD_COMMAND_ROW_0_HOME          0x80    //1000 0000
-#define LCD_COMMAND_ROW_1_HOME          0xC0    //1100 0000
-
-//parallel master port mode
-#define PMMODE_HOLD_DATA_AFTER_STROBE_Wait_4        0x0003  //0000 0000 0000 0011
-#define PMMODE_READ_TO_BYTE_ENABLE_STROBE_WAIT_15   0x003c  //0000 0000 0011 1100
-#define PMMODE_R_W_ADR_PHASE_WAIT_4                 0x00c0  //0000 0000 1100 0000
-#define PMMODE_PARALLEL_MASTER_PORTMODE_1           0x0300  //0000 0011 0000 0000
-#define PMMODE_PARALLEL_MASTER_PORTMODE_8_BIT       0x0000  //0000 0000 0000 0000
-#define PMMODE_INCREMENT_MODE_NO_INCR               0x0000    
-#define PMMODE_INTERRUPT_REQUEST_MODE_NO_INTERR     0x0000
-#define PMMODE_BUSY_BIT_NOT_BUSY                    0x0000
-
-//parallel master port control register 
- //1000 0011 1000 0011
-#define PMCON_READ_STROBE_POLARITY_ENABLE_ACTIVE_HIGH       0x0001 
-#define PMCON_SET_STROBE_POLARITY_IS_ACTIVE_HIGH            0x0002            
-#define PMCON_BYTE_ENABLE_ACTIVE_LOW                        0x0000
-#define PMCON_CHIP_SELECT_0_POLARITY_ACTIVE_LOW             0x0000
-#define PMCON_CHIP_SELECT_1_POLARITY_ACTIVE_LOW             0x0000
-#define PMCON_ADRESS_LATCH_POLARITY_ACTIVE_LOW              0x0000
-#define PMCON_CHIP_SELECT_FUNCTION_PMC1_PMCS2_AS_CHIPSELECT 0x0080 
-#define PMCON_READ_WRITE_STROBE_PORT_ENABLED                0x0100
-#define PMCON_WRITE_ENABLE_STROPE_PORT_ENABLED              0x0200
-#define PMCON_BYTE_ENABLE_PORT_DISABLED                     0x0000
-#define PMCON_ADRESS_AND_DATA_ON_SEPERATE_PINS              0x0000
-#define PMCON_PMP_CONTINUE_MODULE_OP_IN_IDLE_MODE           0X0000
-#define PMCON_PARALLEL_MASTER_PORT_ENABLED                  0X8000
-
-//parallel master port  address enable register
-#define PMAEN_PMALL_STROBE_ENABLED      0x0001
-#define PMAEN_PMP_ADRESS_PORT_AS_IO     0x0000
-#define PMAEN_PMCS1_STROBE_AS_IO        0x0000
-#define PMAEN_PMCS1_STROBE_AS_IO        0x0000
-
+#define LCD_COMMAND_CLEAR_SCREEN        0x01
+#define LCD_COMMAND_RETURN_HOME         0x02
+#define LCD_COMMAND_ENTER_DATA_MODE     0x06
+#define LCD_COMMAND_CURSOR_OFF          0x0C
+#define LCD_COMMAND_CURSOR_ON           0x0F
+#define LCD_COMMAND_MOVE_CURSOR_LEFT    0x10
+#define LCD_COMMAND_MOVE_CURSOR_RIGHT   0x14
+#define LCD_COMMAND_SET_MODE_8_BIT      0x38
+#define LCD_COMMAND_ROW_0_HOME          0x80
+#define LCD_COMMAND_ROW_1_HOME          0xC0
 
 /* Private Functions *************************************************/
 static void LCD_CarriageReturn ( void ) ;
@@ -75,92 +68,67 @@ static void LCD_ShiftCursorLeft ( void ) ;
 static void LCD_ShiftCursorRight ( void ) ;
 static void LCD_ShiftCursorUp ( void ) ;
 static void LCD_ShiftCursorDown ( void ) ;
-static void LCD_Wait ( unsigned long ) ;
+static void LCD_Wait ( uint32_t ) ;
 
 /* Private variables ************************************************/
 static uint8_t row ;
 static uint8_t column ;
-
 /*********************************************************************
-* Function: bool LCD_Initialize(void);
-*
-* Overview: Initializes the LCD screen.  
-*
-* PreCondition: none
-*
-* Input: None
-*
-* Output: true if successful, false if not
-*
-********************************************************************/
-bool LCD_Initialize(void){
-    
-    //parallel master port mode register
-    PMMODE = PMMODE_HOLD_DATA_AFTER_STROBE_Wait_4 
-            | PMMODE_READ_TO_BYTE_ENABLE_STROBE_WAIT_15 
-            | PMMODE_R_W_ADR_PHASE_WAIT_4
-            | PMMODE_PARALLEL_MASTER_PORTMODE_1
-            | PMMODE_PARALLEL_MASTER_PORTMODE_8_BIT
-            | PMMODE_INCREMENT_MODE_NO_INCR
-            | PMMODE_INTERRUPT_REQUEST_MODE_NO_INTERR
-            | PMMODE_BUSY_BIT_NOT_BUSY;
-    
-    //parallel master port control register 
-    //PMCON = 0x8383 ; //1000 0011 1000 0011
-    PMCON =  PMCON_READ_STROBE_POLARITY_ENABLE_ACTIVE_HIGH 
-            | PMCON_SET_STROBE_POLARITY_IS_ACTIVE_HIGH 
-            | PMCON_BYTE_ENABLE_ACTIVE_LOW 
-            | PMCON_CHIP_SELECT_0_POLARITY_ACTIVE_LOW 
-            | PMCON_CHIP_SELECT_1_POLARITY_ACTIVE_LOW 
-            | PMCON_ADRESS_LATCH_POLARITY_ACTIVE_LOW 
-            | PMCON_CHIP_SELECT_FUNCTION_PMC1_PMCS2_AS_CHIPSELECT 
-            | PMCON_READ_WRITE_STROBE_PORT_ENABLED 
-            | PMCON_WRITE_ENABLE_STROPE_PORT_ENABLED 
-            | PMCON_BYTE_ENABLE_PORT_DISABLED 
-            | PMCON_ADRESS_AND_DATA_ON_SEPERATE_PINS 
-            | PMCON_PMP_CONTINUE_MODULE_OP_IN_IDLE_MODE 
-            | PMCON_PARALLEL_MASTER_PORT_ENABLED;
-    
-    //parallel master port  address enable register
+ * Function: bool LCD_Initialize(void);
+ *
+ * Overview: Initializes the LCD screen.  Can take several hundred
+ *           milliseconds.
+ *
+ * PreCondition: none
+ *
+ * Input: None
+ *
+ * Output: true if initialized, false otherwise
+ *
+ ********************************************************************/
+bool LCD_Initialize ( void )
+{
+    PMMODE = 0x03ff ;
+    // Enable PMP Module, No Address & Data Muxing,
+    // Enable RdWr Port, Enable Enb Port, No Chip Select,
+    // Select RdWr and Enb signals Active High
+    PMCON = 0x8383 ;
+    // Enable A0
+    PMAEN = 0x0001 ;
 
-    PMAEN = PMAEN_PMALL_STROBE_ENABLED     
-           | PMAEN_PMP_ADRESS_PORT_AS_IO   
-           | PMAEN_PMCS1_STROBE_AS_IO      
-           | PMAEN_PMCS1_STROBE_AS_IO;      
-    
-    
     LCD_Wait ( LCD_STARTUP ) ;
 
-    LCD_SendCommand ( LCD_COMMAND_SET_MODE_8_BIT ,     LCD_FAST_INSTR + LCD_STARTUP ) ;
-    LCD_SendCommand ( LCD_COMMAND_CURSOR_OFF ,         LCD_FAST_INSTR ) ;
-    LCD_SendCommand ( LCD_COMMAND_ENTER_DATA_MODE ,    LCD_SLOW_INSTR ) ;
+    LCD_SendCommand ( LCD_COMMAND_SET_MODE_8_BIT ,     LCD_F_INSTR ) ;
+    LCD_SendCommand ( LCD_COMMAND_CURSOR_OFF , LCD_F_INSTR  ) ;
+    LCD_SendCommand ( LCD_COMMAND_ENTER_DATA_MODE , LCD_F_INSTR ) ;
 
     LCD_ClearScreen ( ) ;
 
     return true ;
 }
-
 /*********************************************************************
-* Function: void LCD_PutString(char* inputString, uint16_t length);
-*
-* Overview: Puts a string on the LCD screen.  Unsupported characters will be
-*           discarded.  If Lcd is not ready or buffer space not available 
-*          characters are blocked or thrown away
-*          if null terminator (0x00) is reached ir the length number of 
-*          characters is printed it will terminate
-*
-* PreCondition: already initialized via LCD_Initialize()
-*
-* Input: char* - string to print
-*        uint16_t - length of string to print
-*
-* Output: None
-*
-********************************************************************/
-
-void LCD_PutString(char* inputString, uint16_t length){
-    while (length--){
-        switch (*inputString){
+ * Function: void LCD_PutString(char* inputString, uint16_t length);
+ *
+ * Overview: Puts a string on the LCD screen.  Unsupported characters will be
+ *           discarded.  May block or throw away characters is LCD is not ready
+ *           or buffer space is not available.  Will terminate when either a
+ *           null terminator character (0x00) is reached or the length number
+ *           of characters is printed, which ever comes first.
+ *
+ * PreCondition: already initialized via LCD_Initialize()
+ *
+ * Input: char* - string to print
+ *        uint16_t - length of string to print
+ *
+ * Output: None
+ *
+ ********************************************************************/
+void LCD_PutString ( char* inputString , uint16_t length )
+{
+    while (length--)
+    {
+        switch (*inputString)
+        {
             case 0x00:
                 return ;
 
@@ -170,35 +138,45 @@ void LCD_PutString(char* inputString, uint16_t length){
         }
     }
 }
-
 /*********************************************************************
-* Function: void LCD_PutChar(char);
-*
-* Overview: Puts a character on the LCD screen.  Unsupported characters will be
-*           discarded.  May block or throw away characters is LCD is not ready
-*           or buffer space is not available. Will terminate when null 
-*           terminator character (0x00) is reached or the length number of 
-*           characters is printed.
-*
-* PreCondition: already initialized via LCD_Initialize()
-*
-* Input: char - character to print
-*
-* Output: None
-*
-********************************************************************/
-void LCD_PutChar(char inputCharacter){
-    
-    switch (inputCharacter){
+ * Function: void LCD_PutChar(char);
+ *
+ * Overview: Puts a character on the LCD screen.  Unsupported characters will be
+ *           discarded.  May block or throw away characters is LCD is not ready
+ *           or buffer space is not available.
+ *
+ * PreCondition: already initialized via LCD_Initialize()
+ *
+ * Input: char - character to print
+ *
+ * Output: None
+ *
+ ********************************************************************/
+void LCD_PutChar ( char inputCharacter )
+{
+    static char lastCharacter = 0;
+        
+    switch (inputCharacter)
+    {
         case '\r':
-            LCD_CarriageReturn ( ) ;
+            if(lastCharacter != '\n')
+            {
+                LCD_CarriageReturn ( ) ;
+            }
             break ;
 
-        case '\n':
-            if (row == 0) {
+        case '\n': 
+            if(lastCharacter != '\r')
+            {
+                LCD_CarriageReturn ( ) ;
+            }
+            
+            if (row == 0)
+            {
                 LCD_ShiftCursorDown ( ) ;
             }
-            else {
+            else
+            {
                 LCD_ShiftCursorUp ( ) ;
             }
             break ;
@@ -208,74 +186,61 @@ void LCD_PutChar(char inputCharacter){
             LCD_PutChar ( ' ' ) ;
             LCD_ShiftCursorLeft ( ) ;
             break ;
+            
+        case '\f':
+            LCD_ClearScreen();
+            break;
 
         default:
-            LCD_SendData ( inputCharacter ) ;
-            column++ ;
-
-            if (column == LCD_MAX_COLUMN) {
+            if (column == LCD_MAX_COLUMN)
+            {
                 column = 0 ;
-                if (row == 0) {
-                    LCD_SendCommand ( LCD_COMMAND_ROW_1_HOME , LCD_SLOW_INSTR ) ;
+                if (row == 0)
+                {
+                    LCD_SendCommand ( LCD_COMMAND_ROW_1_HOME, LCD_F_INSTR ) ;
                     row = 1 ;
                 }
-                else {
-                    LCD_SendCommand ( LCD_COMMAND_ROW_0_HOME , LCD_SLOW_INSTR ) ;
+                else
+                {
+                    LCD_SendCommand ( LCD_COMMAND_ROW_0_HOME, LCD_F_INSTR ) ;
                     row = 0 ;
                 }
             }
+            
+            LCD_SendData ( inputCharacter ) ;
+            column++ ;
             break ;
     }
+    
+    lastCharacter = inputCharacter;
 }
 /*********************************************************************
-* Function: void LCD_ClearScreen(void);
-*
-* Overview: Clears the screen, if possible.
-*
-* PreCondition: already initialized via LCD_Initialize()
-*
-* Input: None
-*
-* Output: None
-*
-********************************************************************/
+ * Function: void LCD_ClearScreen(void);
+ *
+ * Overview: Clears the screen, if possible.
+ *
+ * PreCondition: already initialized via LCD_Initialize()
+ *
+ * Input: None
+ *
+ * Output: None
+ *
+ ********************************************************************/
 void LCD_ClearScreen ( void )
 {
-    LCD_SendCommand ( LCD_COMMAND_CLEAR_SCREEN , LCD_SLOW_INSTR ) ;
-    LCD_SendCommand ( LCD_COMMAND_RETURN_HOME ,  LCD_SLOW_INSTR ) ;
+    LCD_SendCommand ( LCD_COMMAND_CLEAR_SCREEN , LCD_S_INSTR ) ;
+    LCD_SendCommand ( LCD_COMMAND_RETURN_HOME , LCD_S_INSTR) ;
 
     row = 0 ;
     column = 0 ;
 }
 
-/*********************************************************************
-* Function: void LCD_CursorEnable(bool enable)
-*
-* Overview: Enables/disables cursor
-*
-* PreCondition: None
-*
-* Input: bool - specifies if the cursor should be on or off
-*
-* Output: None
-*
-********************************************************************/
-void LCD_CursorEnable ( bool enable ) {
-    if (enable == true) {
-        LCD_SendCommand ( LCD_COMMAND_CURSOR_ON , LCD_SLOW_INSTR ) ;
-    }
-    else {
-        LCD_SendCommand ( LCD_COMMAND_CURSOR_OFF , LCD_SLOW_INSTR ) ;
-    }
-}
 
-
-/****************************************************************************
- * 
- *                    private functions 
- *  
- ****************************************************************************/
-
+/*******************************************************************/
+/*******************************************************************/
+/* Private Functions ***********************************************/
+/*******************************************************************/
+/*******************************************************************/
 /*********************************************************************
  * Function: static void LCD_CarriageReturn(void)
  *
@@ -290,11 +255,13 @@ void LCD_CursorEnable ( bool enable ) {
  ********************************************************************/
 static void LCD_CarriageReturn ( void )
 {
-    if (row == 0) {
-        LCD_SendCommand ( LCD_COMMAND_ROW_0_HOME , LCD_SLOW_INSTR ) ;
+    if (row == 0)
+    {
+        LCD_SendCommand ( LCD_COMMAND_ROW_0_HOME , LCD_F_INSTR) ;
     }
-    else {
-        LCD_SendCommand ( LCD_COMMAND_ROW_1_HOME , LCD_SLOW_INSTR ) ;
+    else
+    {
+        LCD_SendCommand ( LCD_COMMAND_ROW_1_HOME , LCD_F_INSTR ) ;
     }
     column = 0 ;
 }
@@ -314,24 +281,29 @@ static void LCD_ShiftCursorLeft ( void )
 {
     uint8_t i ;
 
-    if (column == 0) {
-        if (row == 0) {
-            LCD_SendCommand ( LCD_COMMAND_ROW_1_HOME , LCD_SLOW_INSTR ) ;
+    if (column == 0)
+    {
+        if (row == 0)
+        {
+            LCD_SendCommand ( LCD_COMMAND_ROW_1_HOME , LCD_F_INSTR ) ;
             row = 1 ;
         }
-        else {
-            LCD_SendCommand ( LCD_COMMAND_ROW_0_HOME , LCD_SLOW_INSTR ) ;
+        else
+        {
+            LCD_SendCommand ( LCD_COMMAND_ROW_0_HOME , LCD_F_INSTR ) ;
             row = 0 ;
         }
 
         //Now shift to the end of the row
-        for (i = 0 ; i < ( LCD_MAX_COLUMN - 1 ) ; i++) {
+        for (i = 0 ; i < ( LCD_MAX_COLUMN - 1 ) ; i++)
+        {
             LCD_ShiftCursorRight ( ) ;
         }
     }
-    else {
+    else
+    {
         column-- ;
-        LCD_SendCommand ( LCD_COMMAND_MOVE_CURSOR_LEFT , LCD_FAST_INSTR ) ;
+        LCD_SendCommand ( LCD_COMMAND_MOVE_CURSOR_LEFT , LCD_F_INSTR ) ;
     }
 }
 /*********************************************************************
@@ -346,18 +318,22 @@ static void LCD_ShiftCursorLeft ( void )
  * Output: None
  *
  ********************************************************************/
-static void LCD_ShiftCursorRight ( void ) {
-    LCD_SendCommand ( LCD_COMMAND_MOVE_CURSOR_RIGHT , LCD_FAST_INSTR ) ;
+static void LCD_ShiftCursorRight ( void )
+{
+    LCD_SendCommand ( LCD_COMMAND_MOVE_CURSOR_RIGHT , LCD_F_INSTR ) ;
     column++ ;
 
-    if (column == LCD_MAX_COLUMN) {
+    if (column == LCD_MAX_COLUMN)
+    {
         column = 0 ;
-        if (row == 0) {
-            LCD_SendCommand ( LCD_COMMAND_ROW_1_HOME , LCD_SLOW_INSTR ) ;
+        if (row == 0)
+        {
+            LCD_SendCommand ( LCD_COMMAND_ROW_1_HOME , LCD_F_INSTR ) ;
             row = 1 ;
         }
-        else {
-            LCD_SendCommand ( LCD_COMMAND_ROW_0_HOME , LCD_SLOW_INSTR ) ;
+        else
+        {
+            LCD_SendCommand ( LCD_COMMAND_ROW_0_HOME , LCD_F_INSTR ) ;
             row = 0 ;
         }
     }
@@ -374,10 +350,12 @@ static void LCD_ShiftCursorRight ( void ) {
  * Output: None
  *
  ********************************************************************/
-static void LCD_ShiftCursorUp ( void ) {
+static void LCD_ShiftCursorUp ( void )
+{
     uint8_t i ;
 
-    for (i = 0 ; i < LCD_MAX_COLUMN ; i++) {
+    for (i = 0 ; i < LCD_MAX_COLUMN ; i++)
+    {
         LCD_ShiftCursorLeft ( ) ;
     }
 }
@@ -393,10 +371,12 @@ static void LCD_ShiftCursorUp ( void ) {
  * Output: None
  *
  ********************************************************************/
-static void LCD_ShiftCursorDown ( void ) {
+static void LCD_ShiftCursorDown ( void )
+{
     uint8_t i ;
 
-    for (i = 0 ; i < LCD_MAX_COLUMN ; i++) {
+    for (i = 0 ; i < LCD_MAX_COLUMN ; i++)
+    {
         LCD_ShiftCursorRight ( ) ;
     }
 }
@@ -407,14 +387,39 @@ static void LCD_ShiftCursorDown ( void ) {
  *
  * PreCondition: None
  *
- * Input: unsigned int - artibrary delay time based on loop counts.
+ * Input: unsigned int - arbitrary delay time based on loop counts.
  *
  * Output: None
  *
  ********************************************************************/
-static void LCD_Wait ( unsigned long delay ) {
-    while (delay) {
+static void LCD_Wait ( uint32_t delay )
+{
+    while (delay)
+    {
         Nop();
         delay-- ;
+    }
+}
+/*********************************************************************
+ * Function: void LCD_CursorEnable(bool enable)
+ *
+ * Overview: Enables/disables the cursor
+ *
+ * PreCondition: None
+ *
+ * Input: bool - specifies if the cursor should be on or off
+ *
+ * Output: None
+ *
+ ********************************************************************/
+void LCD_CursorEnable ( bool enable )
+{
+    if (enable == true)
+    {
+        LCD_SendCommand ( LCD_COMMAND_CURSOR_ON , LCD_F_INSTR ) ;
+    }
+    else
+    {
+        LCD_SendCommand ( LCD_COMMAND_CURSOR_OFF , LCD_F_INSTR ) ;
     }
 }

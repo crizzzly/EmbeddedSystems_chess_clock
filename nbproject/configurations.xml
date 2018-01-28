@@ -24,9 +24,12 @@
       <itemPath>app_data.h</itemPath>
       <itemPath>system.c</itemPath>
       <itemPath>hexdec.c</itemPath>
-      <itemPath>main.c</itemPath>
       <itemPath>HelloWorld4.c</itemPath>
       <itemPath>onboardBtn.c</itemPath>
+      <itemPath>quadratureEncoder.h</itemPath>
+      <itemPath>quadratureEncoder.c</itemPath>
+      <itemPath>digitalIO.c</itemPath>
+      <itemPath>digitalIO.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -263,6 +266,7 @@
         <property key="UART 3" value="true"/>
         <property key="UART 4" value="true"/>
         <property key="USB" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
@@ -298,8 +302,6 @@
         <property key="voltagevalue" value="3.25"/>
       </PICkit3PlatformTool>
       <item path="hexdec.c" ex="true" overriding="false">
-      </item>
-      <item path="main.c" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -355,6 +357,8 @@
         <C30-AR>
           <property key="additional-options-chop-files" value="false"/>
         </C30-AR>
+        <C30-AS>
+        </C30-AS>
         <C30-LD>
           <property key="additional-options-use-response-files" value="false"/>
           <property key="boot-eeprom" value="no_eeprom"/>
