@@ -16,20 +16,35 @@
 //#include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
 #include <stdio.h>
-#include "digitalIO.c"
+
+typedef enum {
+            LED200,
+            LED201,
+            LED202,
+            LED203,
+            BTN200,
+            BTN201,
+            BTN202,
+            BTN203
+}PIN;
+
+
+
+#define LED_COUNT 4
+#define BTN_COUNT 4
 
 //sets the pin as input or output pin or if it should change state on pullup or pulldown
-void pinMode(uint16_t pin, uint8_t mode);
+void pinMode(PIN pin, uint8_t value);
 
 
 //reads the current value of the pin
-uint8_t digitalRead(uint16_t pin); 
+uint8_t digitalRead(PIN pin); 
 
 //writes to the latch
-void digitalWrite(uint16_t pin, uint8_t value);
+void digitalWrite(PIN pin, uint8_t value);
 
 //enables/disables all onboard LEDs
-void writeAllLED(uint16_t value); 
+void writeAllLED(PIN value); 
 
 #endif	/* XC_HEADER_TEMPLATE_H */
 

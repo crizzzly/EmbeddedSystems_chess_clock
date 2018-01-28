@@ -1,2 +1,3 @@
 build/default/production/digitalIO.o:  \
-digitalIO.c 
+digitalIO.c  \
+digitalIO.h 

@@ -58,6 +58,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdbool.h>
 #include "app_data.h"
 
+#define INPUT 1
+#define OUTPUT 0
+
 #define ONE_VOLT 310
 #define ONE_TENTH_VOLT 31
 #define ONE_HUNDREDTH_VOLT 3
@@ -95,26 +98,28 @@ APP_DATA appData = {
 // *****************************************************************************
 int main ( void )
 {
+    pinMode(LED200, OUTPUT);
+    pinMode(LED201, OUTPUT);
+    pinMode(LED202, OUTPUT);
+    pinMode(LED203, OUTPUT);
+    
+    pinMode(BTN200, INPUT);
+    pinMode(BTN201, INPUT);
+    pinMode(BTN202, INPUT);
+    pinMode(BTN203, INPUT);
 
     SYS_Initialize ( ) ;
     
     while (1){
-        if (digitalRead(BTN200)){
-            LCD_PutString ( (char*) &appData.message1[0] , sizeof (appData.message1 ) - 1 ) ;
-            digitalWrite(LED200, 1);
-        }
-        if (digitalRead(BTN201)){
-            LCD_PutString ( (char*) &appData.message1[0] , sizeof (appData.message1 ) - 1 ) ;
-            digitalWrite(LED201, 1);
-        }
-        if (digitalRead(BTN202)){
-            LCD_PutString ( (char*) &appData.message1[0] , sizeof (appData.message1 ) - 1 ) ;
-            digitalWrite(LED202, 1);
-        }
-        if (digitalRead(BTN203)){
-            LCD_PutString ( (char*) &appData.message1[0] , sizeof (appData.message1 ) - 1 ) ;
-            digitalWrite(LED203, 1);
-        }
+            digitalWrite(LED200, !digitalRead(BTN200));
+        
+            digitalWrite(LED201, !digitalRead(BTN201));
+        
+        
+            digitalWrite(LED202, !digitalRead(BTN202));
+      
+            digitalWrite(LED203, !digitalRead(BTN203));
+        
     }
 
 //    

@@ -13,9 +13,6 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>onboardLEDs.c</itemPath>
-      <itemPath>onboardBtn.h</itemPath>
-      <itemPath>onboardLeds.h</itemPath>
       <itemPath>timer.c</itemPath>
       <itemPath>timer.h</itemPath>
       <itemPath>lcd.c</itemPath>
@@ -25,7 +22,6 @@
       <itemPath>system.c</itemPath>
       <itemPath>hexdec.c</itemPath>
       <itemPath>HelloWorld4.c</itemPath>
-      <itemPath>onboardBtn.c</itemPath>
       <itemPath>quadratureEncoder.h</itemPath>
       <itemPath>quadratureEncoder.c</itemPath>
       <itemPath>digitalIO.c</itemPath>

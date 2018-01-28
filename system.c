@@ -76,15 +76,7 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _MathError ( void ) ;
 void SYS_Initialize ( void )
 {
     /* Enable LEDs*/
-    pinMode(LED200, OUTPUT);
-    pinMode(LED201, OUTPUT);
-    pinMode(LED202, OUTPUT);
-    pinMode(LED203, OUTPUT);
     
-    pinMode(BTN200, INPUT);
-    pinMode(BTN201, INPUT);
-    pinMode(BTN202, INPUT);
-    pinMode(BTN203, INPUT);
 
         
 

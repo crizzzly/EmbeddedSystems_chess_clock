@@ -45,6 +45,19 @@ typedef enum {
 
 #define LED_COUNT 4
 
+//sets the pin as input or output pin or if it should change state on pullup or pulldown
+void pinMode(uint16_t pin, uint8_t mode);
+
+
+//reads the current value of the pin
+uint8_t digitalRead(uint16_t pin); 
+
+//writes to the latch
+void digitalWrite(uint16_t pin, uint8_t value);
+
+//enables/disables all onboard LEDs
+void writeAllLED(uint16_t value); 
+
 /*********************************************************************
 * Function: void LED_On(LED led);
 *

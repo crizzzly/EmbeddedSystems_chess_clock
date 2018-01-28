@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=onboardLEDs.c timer.c lcd.c system.c HelloWorld4.c onboardBtn.c quadratureEncoder.c digitalIO.c
+SOURCEFILES_QUOTED_IF_SPACED=timer.c lcd.c system.c HelloWorld4.c quadratureEncoder.c digitalIO.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/onboardLEDs.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/lcd.o ${OBJECTDIR}/system.o ${OBJECTDIR}/HelloWorld4.o ${OBJECTDIR}/onboardBtn.o ${OBJECTDIR}/quadratureEncoder.o ${OBJECTDIR}/digitalIO.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/onboardLEDs.o.d ${OBJECTDIR}/timer.o.d ${OBJECTDIR}/lcd.o.d ${OBJECTDIR}/system.o.d ${OBJECTDIR}/HelloWorld4.o.d ${OBJECTDIR}/onboardBtn.o.d ${OBJECTDIR}/quadratureEncoder.o.d ${OBJECTDIR}/digitalIO.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/timer.o ${OBJECTDIR}/lcd.o ${OBJECTDIR}/system.o ${OBJECTDIR}/HelloWorld4.o ${OBJECTDIR}/quadratureEncoder.o ${OBJECTDIR}/digitalIO.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/timer.o.d ${OBJECTDIR}/lcd.o.d ${OBJECTDIR}/system.o.d ${OBJECTDIR}/HelloWorld4.o.d ${OBJECTDIR}/quadratureEncoder.o.d ${OBJECTDIR}/digitalIO.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/onboardLEDs.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/lcd.o ${OBJECTDIR}/system.o ${OBJECTDIR}/HelloWorld4.o ${OBJECTDIR}/onboardBtn.o ${OBJECTDIR}/quadratureEncoder.o ${OBJECTDIR}/digitalIO.o
+OBJECTFILES=${OBJECTDIR}/timer.o ${OBJECTDIR}/lcd.o ${OBJECTDIR}/system.o ${OBJECTDIR}/HelloWorld4.o ${OBJECTDIR}/quadratureEncoder.o ${OBJECTDIR}/digitalIO.o
 
 # Source Files
-SOURCEFILES=onboardLEDs.c timer.c lcd.c system.c HelloWorld4.c onboardBtn.c quadratureEncoder.c digitalIO.c
+SOURCEFILES=timer.c lcd.c system.c HelloWorld4.c quadratureEncoder.c digitalIO.c
 
 
 CFLAGS=
@@ -94,13 +94,6 @@ MP_LINKER_FILE_OPTION=,--script=p33EP512MU810.gld
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: compile
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/onboardLEDs.o: onboardLEDs.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/onboardLEDs.o.d 
-	@${RM} ${OBJECTDIR}/onboardLEDs.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  onboardLEDs.c  -o ${OBJECTDIR}/onboardLEDs.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/onboardLEDs.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -no-legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off  
-	@${FIXDEPS} "${OBJECTDIR}/onboardLEDs.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
-	
 ${OBJECTDIR}/timer.o: timer.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/timer.o.d 
@@ -129,13 +122,6 @@ ${OBJECTDIR}/HelloWorld4.o: HelloWorld4.c  nbproject/Makefile-${CND_CONF}.mk
 	${MP_CC} $(MP_EXTRA_CC_PRE)  HelloWorld4.c  -o ${OBJECTDIR}/HelloWorld4.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/HelloWorld4.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -no-legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off  
 	@${FIXDEPS} "${OBJECTDIR}/HelloWorld4.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
-${OBJECTDIR}/onboardBtn.o: onboardBtn.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/onboardBtn.o.d 
-	@${RM} ${OBJECTDIR}/onboardBtn.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  onboardBtn.c  -o ${OBJECTDIR}/onboardBtn.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/onboardBtn.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -no-legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off  
-	@${FIXDEPS} "${OBJECTDIR}/onboardBtn.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
-	
 ${OBJECTDIR}/quadratureEncoder.o: quadratureEncoder.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/quadratureEncoder.o.d 
@@ -151,13 +137,6 @@ ${OBJECTDIR}/digitalIO.o: digitalIO.c  nbproject/Makefile-${CND_CONF}.mk
 	@${FIXDEPS} "${OBJECTDIR}/digitalIO.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
 else
-${OBJECTDIR}/onboardLEDs.o: onboardLEDs.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/onboardLEDs.o.d 
-	@${RM} ${OBJECTDIR}/onboardLEDs.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  onboardLEDs.c  -o ${OBJECTDIR}/onboardLEDs.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/onboardLEDs.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -no-legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off  
-	@${FIXDEPS} "${OBJECTDIR}/onboardLEDs.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
-	
 ${OBJECTDIR}/timer.o: timer.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/timer.o.d 
@@ -185,13 +164,6 @@ ${OBJECTDIR}/HelloWorld4.o: HelloWorld4.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/HelloWorld4.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  HelloWorld4.c  -o ${OBJECTDIR}/HelloWorld4.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/HelloWorld4.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -no-legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off  
 	@${FIXDEPS} "${OBJECTDIR}/HelloWorld4.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
-	
-${OBJECTDIR}/onboardBtn.o: onboardBtn.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/onboardBtn.o.d 
-	@${RM} ${OBJECTDIR}/onboardBtn.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  onboardBtn.c  -o ${OBJECTDIR}/onboardBtn.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/onboardBtn.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -no-legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off  
-	@${FIXDEPS} "${OBJECTDIR}/onboardBtn.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
 ${OBJECTDIR}/quadratureEncoder.o: quadratureEncoder.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 

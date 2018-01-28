@@ -10,7 +10,7 @@
 #include <stdbool.h>
 #include <p33EP512MU810.h>
 
-//#include "digitalIO.h"
+#include "digitalIO.h"
 
 #define BTN200_PORT   PORTGbits.RG12 
 #define BTN201_PORT   PORTGbits.RG13 
@@ -36,6 +36,12 @@
 #define BTN201_CNPD  CNPDGbits.CNPDG13
 #define BTN202_CNPD  CNPDGbits.CNPDG14
 #define BTN203_CNPD  CNPDGbits.CNPDG15
+
+#define BTN200_LAT  LATGbits.LATG12
+#define BTN201_LAT  LATGbits.LATG13
+#define BTN202_LAT  LATGbits.LATG14
+#define BTN203_LAT  LATGbits.LATG15
+
 
 #define LED200_LAT LATBbits.LATB8
 #define LED201_LAT LATBbits.LATB9
@@ -68,15 +74,7 @@
 #define LED202_CNPD CNPDBbits.CNPDB10
 #define LED203_CNPD CNPDBbits.CNPDB11
 
-#define LED200 0
-#define LED201 1
-#define LED202 2
-#define LED203 3
 
-#define BTN200 4
-#define BTN201 5
-#define BTN202 6
-#define BTN203 7
 
 #define BTN_PRESSED     1
 #define BTN_NOT_PRESSED 0
@@ -87,23 +85,15 @@
 #define INPUT   1
 #define OUTPUT  0
 
-//sets the pin as input or output pin or if it should change state on pullup or pulldown
-void pinMode(uint16_t pin, uint8_t mode);
-
-
-//reads the current value of the pin
-uint8_t digitalRead(uint16_t pin); 
-
-//writes to the latch
-void digitalWrite(uint16_t pin, uint8_t value);
-
-//enables/disables all onboard LEDs
-void writeAllLED(uint16_t value); 
+#define HIGH 1
+#define LOW 0
 
 
 
-void pinMode(uint16_t pin, uint8_t value){
-    switch(pin){
+
+
+void pinMode(PIN pin, uint8_t value){
+        switch(pin){
         case LED200:
             LED200_TRIS = value ;
             LED200_CNEN = 0;
@@ -131,60 +121,71 @@ void pinMode(uint16_t pin, uint8_t value){
             LED203_CNPU = 0;
             LED203_CNPD = 0;
             break;
+        
             
         case BTN200:
             BTN200_TRIS = value;
             BTN200_CNEN = 0;
             BTN200_CNPU = 1;
             BTN200_CNPD = 0;
+            BTN200_LAT  = 0;
+            
         case BTN201:
             BTN201_TRIS = value;
             BTN201_CNEN = 0;
             BTN201_CNPU = 1;
             BTN201_CNPD = 0;
+            BTN201_LAT  = 0;
+
             
         case BTN202:
             BTN202_TRIS = value;
             BTN202_CNEN = 0;
             BTN202_CNPU = 1;
             BTN202_CNPD = 0;
+            BTN201_LAT  = 0;
+
             
         case BTN203:
             BTN203_TRIS = value;
             BTN203_CNEN = 0;
             BTN203_CNPU = 1;
             BTN203_CNPD = 0;
+            BTN203_LAT  = 0;
+
+        }
                     
     }
+
     
-    uint8_t digitalRead(uint8_t pin){
-        switch(pin){
-            case LED200:
-                return((LED200_LAT == 1) ? true : false) ;
+uint8_t digitalRead(PIN pin){
+    switch(pin){
+        case LED200:
+            return((LED200_LAT == HIGH) ? true : false) ;
 
-            case LED201:
-                return((LED201_LAT == 1) ? true : false) ;
+        case LED201:
+            return((LED201_LAT == HIGH) ? true : false) ;
 
-            case LED202:
-                return((LED202_LAT == 1) ? true : false) ;
+        case LED202:
+            return((LED202_LAT == HIGH) ? true : false) ;
 
-            case LED203:
-                return((LED203_LAT == 1) ? true : false) ;
-                
-            case BTN200:
-                return ((BTN200_PORT == BTN_PRESSED) ? true : false );
-            
-            case BTN201:
-                return ((BTN201_PORT == BTN_PRESSED) ? true : false );
-            
-            case BTN202:
-                return ((BTN202_PORT == BTN_PRESSED) ? true : false );
-        
-            case BTN203:
-                return ((BTN203_PORT == BTN_PRESSED) ? true : false );
-        }
-        return 0;
+        case LED203:
+            return((LED203_LAT == HIGH) ? true : false) ;
+
+        case BTN200:
+            return ((BTN200_PORT == BTN_PRESSED) ? true : false );
+
+        case BTN201:
+            return ((BTN201_PORT == BTN_PRESSED) ? true : false );
+
+        case BTN202:
+            return ((BTN202_PORT == BTN_PRESSED) ? true : false );
+
+        case BTN203:
+            return ((BTN203_PORT == BTN_PRESSED) ? true : false );
     }
+    return 0;
+}
     
     /*********************************************************************
 * Function: void digitalWrite(uint16_t pin, uint8_t value);
@@ -198,7 +199,7 @@ void pinMode(uint16_t pin, uint8_t value){
 * Output: none
 *
 ********************************************************************/
-    void digitalWrite(uint16_t pin, uint8_t value){
+    void digitalWrite(PIN pin, uint8_t value){
         switch(pin){
             case LED200:
                 LED200_LAT = value;
@@ -212,6 +213,8 @@ void pinMode(uint16_t pin, uint8_t value){
             case LED203:
                 LED203_LAT = value;
                 break;
+            default:
+                break;
         }
         
     }
@@ -221,7 +224,7 @@ void pinMode(uint16_t pin, uint8_t value){
         LATB |= (value << 8); // set bits again
     }
 
-}
+
 
 
 
