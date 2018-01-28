@@ -17,34 +17,41 @@
 #include <stdint.h>
 #include <stdio.h>
 
-typedef enum {
-            LED200,
-            LED201,
-            LED202,
-            LED203,
-            BTN200,
-            BTN201,
-            BTN202,
-            BTN203
-}PIN;
+#define LED_ON  1
+#define LED_OFF 0
 
+#define INPUT   1
+#define OUTPUT  0
+
+#define HIGH 1
+#define LOW 0
+
+#define LED200 0
+#define LED201 1
+#define LED202 2
+#define LED203 3
+#define BTN200 4
+#define BTN201 5
+#define BTN202 6
+#define BTN203 7
+#define BTN204 8
 
 
 #define LED_COUNT 4
 #define BTN_COUNT 4
 
 //sets the pin as input or output pin or if it should change state on pullup or pulldown
-void pinMode(PIN pin, uint8_t value);
+void pinMode(uint8_t pin, uint8_t value);
 
 
 //reads the current value of the pin
-uint8_t digitalRead(PIN pin); 
+uint8_t digitalRead(uint8_t pin); 
 
 //writes to the latch
-void digitalWrite(PIN pin, uint8_t value);
+void digitalWrite(uint8_t pin, uint8_t value);
 
 //enables/disables all onboard LEDs
-void writeAllLED(PIN value); 
+void writeAllLED(uint8_t value); 
 
 #endif	/* XC_HEADER_TEMPLATE_H */
 

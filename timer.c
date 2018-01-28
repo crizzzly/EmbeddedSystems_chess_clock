@@ -98,8 +98,7 @@ bool TIMER_RequestTick(TICK_HANDLER handle, uint32_t rate){
  * 
  * PreCondition: none
  * 
- * Input:   handle - the function that will be called when the time event occurs
- *          rate - the number of ticks per event
+ * Input:   config
  * 
  * Output:  true if successful - false if not
  * 

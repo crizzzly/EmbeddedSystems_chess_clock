@@ -38,7 +38,7 @@
  * Revision history: 
  */
 
-#include "digitalIO.h"
+//#include "digitalIO.h"
 #include "lcd.h"
 #include "timer.h"
 #include "print_lcd.h"
@@ -78,6 +78,17 @@ typedef struct
     /*arrays used for Explorer 16 LCD display*/
     char messageLine1[18] ;
     char messageLine2[18]  ;
+    char messageSetTime[18];
+
+    char messageSetTime1[18];
+    char messageSetTime2[18];
+    char messageSetTime3[18];
+    char messageSetTime4[18];
+
+    char messageLine3[18]  ;
+    char messageLine4[18]  ;
+    char messageLine5[18]  ;
+
     char messageTime1[18] ;
     char messageTime2[18] ;
     char message1[18] ;

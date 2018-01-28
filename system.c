@@ -15,6 +15,9 @@
 #include "app_data.h"
 #include "myxc.h"
 #include "digitalIO.h"
+
+#define INPUT 1
+#define OUTPUT 0
 // ****************************************************************************
 // ****************************************************************************
 // Section: File Scope Functions
@@ -75,9 +78,7 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _MathError ( void ) ;
 
 void SYS_Initialize ( void )
 {
-    /* Enable LEDs*/
-    
-
+  
         
 
     /* Initialize LCD*/
@@ -129,29 +130,29 @@ void SOSC_Configuration ( void )
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _T1Interrupt ( void )
 {
     /* update seconds */
-    if ( appData.seconds < 59 )
+    if ( appData.seconds >= 0 )
     {
-        appData.seconds++ ;
+        appData.seconds-- ;
     }
         /* update minutes */
     else
     {
-        appData.seconds = 0x00 ;
-        if ( appData.minutes < 59 )
+        appData.seconds = 0x3c ;
+        if ( appData.minutes >= 0 )
         {
-            appData.minutes++ ;
+            appData.minutes-- ;
         }
             /* update hours */
         else
         {
-            appData.minutes = 0x00 ;
-            if ( appData.hours < 23 )
+            appData.minutes = 0x3c ;
+            if ( appData.hours >= 00 )
             {
-                appData.hours ++ ;
+                appData.hours -- ;
             }
             else
             {
-                appData.hours = 0x00 ;
+                appData.hours = 0x18 ;
             }
         }
     }

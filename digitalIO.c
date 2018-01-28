@@ -74,27 +74,29 @@
 #define LED202_CNPD CNPDBbits.CNPDB10
 #define LED203_CNPD CNPDBbits.CNPDB11
 
+#define BTN_PRESSED     0
+#define BTN_NOT_PRESSED 1
 
 
-#define BTN_PRESSED     1
-#define BTN_NOT_PRESSED 0
+/*
+PIN pin {
+             LED200 = 0,
+             LED201 = 1,
+             LED202 = 2,
+             LED203 = 3,
+             BTN200 = 4,
+             BTN201 = 5,
+             BTN202 = 6 ,
+             BTN203 = 7
+};
 
-#define LED_ON  1
-#define LED_OFF 0
+*/
 
-#define INPUT   1
-#define OUTPUT  0
-
-#define HIGH 1
-#define LOW 0
-
-
-
-
-
-void pinMode(PIN pin, uint8_t value){
-        switch(pin){
+//enabled change registers for buttons
+void pinMode(uint8_t pin, uint8_t value){
+    switch(pin){
         case LED200:
+            LED200_ANSEL = 0;
             LED200_TRIS = value ;
             LED200_CNEN = 0;
             LED200_CNPU = 0;
@@ -102,6 +104,7 @@ void pinMode(PIN pin, uint8_t value){
             break;
             
         case LED201:
+            LED201_ANSEL = 0;    
             LED201_TRIS = value ;
             LED201_CNEN = 0;
             LED201_CNPU = 0;
@@ -109,6 +112,7 @@ void pinMode(PIN pin, uint8_t value){
             break;
 
         case LED202:
+            LED200_ANSEL = 0;
             LED202_TRIS = value ;
             LED202_CNEN = 0;
             LED202_CNPU = 0;
@@ -116,19 +120,22 @@ void pinMode(PIN pin, uint8_t value){
             break;
             
         case LED203:
+            LED200_ANSEL = 0;
             LED203_TRIS = value ;
             LED203_CNEN = 0;
             LED203_CNPU = 0;
             LED203_CNPD = 0;
             break;
-        
-            
+
+
         case BTN200:
+            
             BTN200_TRIS = value;
             BTN200_CNEN = 0;
             BTN200_CNPU = 1;
             BTN200_CNPD = 0;
             BTN200_LAT  = 0;
+            break;
             
         case BTN201:
             BTN201_TRIS = value;
@@ -136,6 +143,7 @@ void pinMode(PIN pin, uint8_t value){
             BTN201_CNPU = 1;
             BTN201_CNPD = 0;
             BTN201_LAT  = 0;
+            break;
 
             
         case BTN202:
@@ -144,6 +152,7 @@ void pinMode(PIN pin, uint8_t value){
             BTN202_CNPU = 1;
             BTN202_CNPD = 0;
             BTN201_LAT  = 0;
+            break;
 
             
         case BTN203:
@@ -152,13 +161,13 @@ void pinMode(PIN pin, uint8_t value){
             BTN203_CNPU = 1;
             BTN203_CNPD = 0;
             BTN203_LAT  = 0;
-
+            break;
         }
                     
     }
 
     
-uint8_t digitalRead(PIN pin){
+uint8_t digitalRead(uint8_t pin){
     switch(pin){
         case LED200:
             return((LED200_LAT == HIGH) ? true : false) ;
@@ -199,7 +208,7 @@ uint8_t digitalRead(PIN pin){
 * Output: none
 *
 ********************************************************************/
-    void digitalWrite(PIN pin, uint8_t value){
+    void digitalWrite(uint8_t pin, uint8_t value){
         switch(pin){
             case LED200:
                 LED200_LAT = value;
@@ -219,7 +228,7 @@ uint8_t digitalRead(PIN pin){
         
     }
     
-    void writeAllLED(uint16_t value){
+    void writeAllLED(uint8_t value){
         LATB &= 0xF0FF; // clear all four LEDs
         LATB |= (value << 8); // set bits again
     }

@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=timer.c lcd.c system.c HelloWorld4.c quadratureEncoder.c digitalIO.c
+SOURCEFILES_QUOTED_IF_SPACED=timer.c lcd.c system.c HelloWorld4.c quadratureEncoder.c digitalIO.c time.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/timer.o ${OBJECTDIR}/lcd.o ${OBJECTDIR}/system.o ${OBJECTDIR}/HelloWorld4.o ${OBJECTDIR}/quadratureEncoder.o ${OBJECTDIR}/digitalIO.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/timer.o.d ${OBJECTDIR}/lcd.o.d ${OBJECTDIR}/system.o.d ${OBJECTDIR}/HelloWorld4.o.d ${OBJECTDIR}/quadratureEncoder.o.d ${OBJECTDIR}/digitalIO.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/timer.o ${OBJECTDIR}/lcd.o ${OBJECTDIR}/system.o ${OBJECTDIR}/HelloWorld4.o ${OBJECTDIR}/quadratureEncoder.o ${OBJECTDIR}/digitalIO.o ${OBJECTDIR}/time.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/timer.o.d ${OBJECTDIR}/lcd.o.d ${OBJECTDIR}/system.o.d ${OBJECTDIR}/HelloWorld4.o.d ${OBJECTDIR}/quadratureEncoder.o.d ${OBJECTDIR}/digitalIO.o.d ${OBJECTDIR}/time.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/timer.o ${OBJECTDIR}/lcd.o ${OBJECTDIR}/system.o ${OBJECTDIR}/HelloWorld4.o ${OBJECTDIR}/quadratureEncoder.o ${OBJECTDIR}/digitalIO.o
+OBJECTFILES=${OBJECTDIR}/timer.o ${OBJECTDIR}/lcd.o ${OBJECTDIR}/system.o ${OBJECTDIR}/HelloWorld4.o ${OBJECTDIR}/quadratureEncoder.o ${OBJECTDIR}/digitalIO.o ${OBJECTDIR}/time.o
 
 # Source Files
-SOURCEFILES=timer.c lcd.c system.c HelloWorld4.c quadratureEncoder.c digitalIO.c
+SOURCEFILES=timer.c lcd.c system.c HelloWorld4.c quadratureEncoder.c digitalIO.c time.c
 
 
 CFLAGS=
@@ -136,6 +136,13 @@ ${OBJECTDIR}/digitalIO.o: digitalIO.c  nbproject/Makefile-${CND_CONF}.mk
 	${MP_CC} $(MP_EXTRA_CC_PRE)  digitalIO.c  -o ${OBJECTDIR}/digitalIO.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/digitalIO.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -no-legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off  
 	@${FIXDEPS} "${OBJECTDIR}/digitalIO.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
+${OBJECTDIR}/time.o: time.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/time.o.d 
+	@${RM} ${OBJECTDIR}/time.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  time.c  -o ${OBJECTDIR}/time.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/time.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -no-legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off  
+	@${FIXDEPS} "${OBJECTDIR}/time.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
 else
 ${OBJECTDIR}/timer.o: timer.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
@@ -178,6 +185,13 @@ ${OBJECTDIR}/digitalIO.o: digitalIO.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/digitalIO.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  digitalIO.c  -o ${OBJECTDIR}/digitalIO.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/digitalIO.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -no-legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off  
 	@${FIXDEPS} "${OBJECTDIR}/digitalIO.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/time.o: time.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/time.o.d 
+	@${RM} ${OBJECTDIR}/time.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  time.c  -o ${OBJECTDIR}/time.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/time.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -no-legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off  
+	@${FIXDEPS} "${OBJECTDIR}/time.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
 endif
 

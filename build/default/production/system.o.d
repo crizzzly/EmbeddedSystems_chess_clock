@@ -1,8 +1,8 @@
 build/default/production/system.o:  \
 system.c  \
 app_data.h  \
-digitalIO.h  \
 lcd.h  \
- timer.h  \
-print_lcd.h  \
-myxc.h 
+timer.h  \
+ print_lcd.h  \
+myxc.h  \
+digitalIO.h 

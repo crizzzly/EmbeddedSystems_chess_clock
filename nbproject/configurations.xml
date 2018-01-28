@@ -26,6 +26,8 @@
       <itemPath>quadratureEncoder.c</itemPath>
       <itemPath>digitalIO.c</itemPath>
       <itemPath>digitalIO.h</itemPath>
+      <itemPath>time.c</itemPath>
+      <itemPath>time.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
