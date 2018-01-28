@@ -85,14 +85,14 @@ void setTime(void);
 
 APP_DATA appData = {
                     .messageLine1    = "Chess Clock IoT3\n" ,
-                    
+         /*           
                     .messageSetTime  = "Set Playtime:\n",
                     .messageSetTime1 = "5min -> BTN T0",
                     //.messageSetTime2 = "15 min -> BTN T1\n",
                     .messageSetTime2 = "15 min -> BTN T1",
                     .messageSetTime3 = "30 min -> BTN T2",
                     .messageSetTime4 = "custom -> BTN T3",
-               
+       */        
                     //.messageTime_P1 = "player 1 \n" ,
                     //.messageTime_P2 = "Pl2 00: 00: 00   ",
                     .message1     = "button 1 pressed\n"                            
@@ -108,12 +108,62 @@ APP_DATA appData = {
 int main ( void )
 {
     SYS_Initialize ( ) ;
-    TIMER_SetConfig ( TIMER_CONFIG_RTCC ) ;
-    setTime(); 
     
-    while (1){
+//    digitalWrite(LED200, digitalRead(BTN200));
+//    digitalWrite(LED201, LOW);
+//    digitalWrite(LED202, LOW);
+//    digitalWrite(LED203, LOW);
+    
+    playRandomMelody(); 
+    
+    //setTime(); 
+    
+
+    /*while(1){
+        //digitalWrite(LED200, digitalRead(BTN200));
+        digitalWrite(LED200, LOW);
+        digitalWrite(LED201, LOW);
+        digitalWrite(LED202, LOW);
+        digitalWrite(LED203, LOW);
         
+        if(digitalRead(BTN200)){
+          //  digitalWrite(LED200, HIGH);
+            break;
+        }
+        else{
+          //  digitalWrite(LED200, LOW);
+          break;
+        }
         
+        if (digitalRead(BTN201)){
+            digitalWrite(LED201, HIGH);
+            break;
+        }
+        else{
+            digitalWrite(LED201, LOW);
+            break;
+        }
+
+        if(digitalRead(BTN202)){
+            digitalWrite(LED202,HIGH );
+            break;
+        }
+        else{
+            digitalWrite(LED202, LOW);
+            break;
+        }
+        
+        if(digitalRead(BTN203)){
+            digitalWrite(LED203, HIGH);
+            break;
+        }
+        else{
+            digitalWrite(LED203, LOW);
+            break; 
+        }
+    }*/
+            return 0; 
+
     }
 
 //    
@@ -148,11 +198,10 @@ int main ( void )
 //            Update_LCD ( ) ;
 //            appData.rtc_lcd_update = 0 ;
 //        }
-//
-//
 //    } 
     
-}
+
+
 /*******************************************************************************
 
   Function:
@@ -183,39 +232,17 @@ int main ( void )
 /******************************************************************************/
 
 void setTime(void){
-    uint16_t sec = appData.seconds; 
-    uint16_t oldVal = sec; 
-            LCD_PutString ( (char*) &appData.messageSetTime[0] , sizeof (appData.messageSetTime ) - 1  ) ;
+    //uint16_t sec = appData.seconds; 
+    //uint16_t oldVal = sec; 
+           // LCD_PutString ( (char*) &appData.messageSetTime[0] , sizeof (appData.messageSetTime ) - 1  ) ;
 
-    while(1){
-        
-        if(digitalRead(BTN200)){
-            digitalWrite(LED200, HIGH);
-        }
-        else{
-            digitalWrite(LED200, LOW);
-        }
-        
-        if (digitalRead(BTN201)){
-            digitalWrite(LED201, HIGH);
-        }
-        digitalWrite(LED201, LOW);
-
-        if(digitalRead(BTN202)){
-            digitalWrite(LED202,HIGH );
-        }
-        digitalWrite(LED202, LOW);
-
-        if(digitalRead(BTN203)){
-            digitalWrite(LED203, HIGH);
-        }
-        digitalWrite(LED203, LOW);
-        
+    
+        /*
         while((oldVal-10) > sec){
            sec = appData.seconds ;
        }
         
-        /*
+        
         oldVal = sec; 
         sec = appData.seconds ;
         LCD_PutString ( (char*) &appData.messageSetTime1[0] , sizeof (appData.messageSetTime1 ) - 1  ) ;
@@ -256,7 +283,7 @@ void setTime(void){
         sec = appData.seconds ;
         
     */
-    }
+    
        
 }
 

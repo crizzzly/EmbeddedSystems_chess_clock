@@ -74,26 +74,19 @@
 #define LED202_CNPD CNPDBbits.CNPDB10
 #define LED203_CNPD CNPDBbits.CNPDB11
 
-#define BTN_PRESSED     0
-#define BTN_NOT_PRESSED 1
+#define PIEZ_ANS    ANSELGbits.ANSG8
+#define PIEZ_TRIS   TRISGbits.TRISG8
+#define PIEZ_CNEN   CNENGbits.CNIEG8
+#define PIEZ_PORT   PORTGbits.RG8
+#define PIEZ_LAT    LATGbits.LATG9
 
 
-/*
-PIN pin {
-             LED200 = 0,
-             LED201 = 1,
-             LED202 = 2,
-             LED203 = 3,
-             BTN200 = 4,
-             BTN201 = 5,
-             BTN202 = 6 ,
-             BTN203 = 7
-};
 
-*/
+
+
 
 //enabled change registers for buttons
-void pinMode(uint8_t pin, uint8_t value){
+void pinMode(uint16_t pin, uint8_t value){
     switch(pin){
         case LED200:
             LED200_ANSEL = 0;
@@ -104,7 +97,7 @@ void pinMode(uint8_t pin, uint8_t value){
             break;
             
         case LED201:
-            LED201_ANSEL = 0;    
+            LED201_ANSEL = 0;
             LED201_TRIS = value ;
             LED201_CNEN = 0;
             LED201_CNPU = 0;
@@ -112,7 +105,7 @@ void pinMode(uint8_t pin, uint8_t value){
             break;
 
         case LED202:
-            LED200_ANSEL = 0;
+             LED202_ANSEL = 0;
             LED202_TRIS = value ;
             LED202_CNEN = 0;
             LED202_CNPU = 0;
@@ -120,7 +113,7 @@ void pinMode(uint8_t pin, uint8_t value){
             break;
             
         case LED203:
-            LED200_ANSEL = 0;
+             LED203_ANSEL = 0;
             LED203_TRIS = value ;
             LED203_CNEN = 0;
             LED203_CNPU = 0;
@@ -132,7 +125,7 @@ void pinMode(uint8_t pin, uint8_t value){
             
             BTN200_TRIS = value;
             BTN200_CNEN = 0;
-            BTN200_CNPU = 1;
+            BTN200_CNPU = 0;
             BTN200_CNPD = 0;
             BTN200_LAT  = 0;
             break;
@@ -140,7 +133,7 @@ void pinMode(uint8_t pin, uint8_t value){
         case BTN201:
             BTN201_TRIS = value;
             BTN201_CNEN = 0;
-            BTN201_CNPU = 1;
+            BTN201_CNPU = 0;
             BTN201_CNPD = 0;
             BTN201_LAT  = 0;
             break;
@@ -167,7 +160,7 @@ void pinMode(uint8_t pin, uint8_t value){
     }
 
     
-uint8_t digitalRead(uint8_t pin){
+uint8_t digitalRead(uint16_t pin){
     switch(pin){
         case LED200:
             return((LED200_LAT == HIGH) ? true : false) ;
@@ -182,16 +175,16 @@ uint8_t digitalRead(uint8_t pin){
             return((LED203_LAT == HIGH) ? true : false) ;
 
         case BTN200:
-            return ((BTN200_PORT == BTN_PRESSED) ? true : false );
+            return ((BTN200_PORT == HIGH) ? true : false );
 
         case BTN201:
-            return ((BTN201_PORT == BTN_PRESSED) ? true : false );
+            return ((BTN201_PORT == HIGH) ? true : false );
 
         case BTN202:
-            return ((BTN202_PORT == BTN_PRESSED) ? true : false );
+            return ((BTN202_PORT == HIGH) ? true : false );
 
         case BTN203:
-            return ((BTN203_PORT == BTN_PRESSED) ? true : false );
+            return ((BTN203_PORT == HIGH) ? true : false );
     }
     return 0;
 }
@@ -208,7 +201,7 @@ uint8_t digitalRead(uint8_t pin){
 * Output: none
 *
 ********************************************************************/
-    void digitalWrite(uint8_t pin, uint8_t value){
+    void digitalWrite(uint16_t pin, uint8_t value){
         switch(pin){
             case LED200:
                 LED200_LAT = value;
@@ -233,7 +226,14 @@ uint8_t digitalRead(uint8_t pin){
         LATB |= (value << 8); // set bits again
     }
 
+    
+    
 
-
+void initPiezo() {
+    //Piezo Output
+    PIEZ_ANS = 0;  //
+    PIEZ_TRIS = 0;
+    PIEZ_CNEN = 0;
+}
 
 

@@ -42,7 +42,6 @@
 #include "lcd.h"
 #include "timer.h"
 #include "print_lcd.h"
-//#include "myxc.h"
 
 // *****************************************************************************
 //

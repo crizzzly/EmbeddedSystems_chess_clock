@@ -15,9 +15,6 @@
 #include "app_data.h"
 #include "myxc.h"
 #include "digitalIO.h"
-
-#define INPUT 1
-#define OUTPUT 0
 // ****************************************************************************
 // ****************************************************************************
 // Section: File Scope Functions
@@ -78,14 +75,28 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _MathError ( void ) ;
 
 void SYS_Initialize ( void )
 {
-  
-        
+    /* Init IO Pins for LEDs & BTNs*/
+    pinMode(LED200, OUTPUT);
+    pinMode(LED201, OUTPUT);
+    pinMode(LED202, OUTPUT);
+    pinMode(LED203, OUTPUT);
+    
+    pinMode(BTN200, INPUT);
+    pinMode(BTN201, INPUT);
+    pinMode(BTN202, INPUT);
+    pinMode(BTN203, INPUT);
 
-    /* Initialize LCD*/
-    PRINT_SetConfiguration ( PRINT_CONFIGURATION_LCD ) ;
+    /*Initialize Timer*/
+    TIMER_SetConfig ( TIMER_CONFIG_RTCC ) ;
 
     /* Configure Secondary Ocillator for Timer 1 to work as RTC counter*/
     SOSC_Configuration ( ) ;
+    
+    /* Initialize LCD*/
+    PRINT_SetConfiguration ( PRINT_CONFIGURATION_LCD ) ;
+    
+    /* Init Piezo*/
+    initPiezo();
 }
 
 void SOSC_Configuration ( void )
@@ -152,7 +163,7 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _T1Interrupt ( void )
             }
             else
             {
-                appData.hours = 0x18 ;
+                appData.hours = 0x1 ;
             }
         }
     }
