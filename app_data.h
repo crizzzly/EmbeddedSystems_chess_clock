@@ -73,6 +73,24 @@ typedef struct
     volatile unsigned char ones ;
     volatile unsigned char rtc_lcd_update ;
     
+    /* Variables used by Timer module */
+    volatile unsigned char p1_hours ;
+    volatile unsigned char p1_minutes ;
+    volatile unsigned char p1_seconds ;
+    volatile unsigned char p1_hunds ;
+    volatile unsigned char p1_tens ;
+    volatile unsigned char p1_ones ;
+    volatile unsigned char p1_rtc_lcd_update ;
+    
+    /* Variables used by Timer module */
+    volatile unsigned char p2_hours ;
+    volatile unsigned char p2_minutes ;
+    volatile unsigned char p2_seconds ;
+    volatile unsigned char p2_hunds ;
+    volatile unsigned char p2_tens ;
+    volatile unsigned char p2_ones ;
+    volatile unsigned char p2_rtc_lcd_update ;
+    
 
     /*arrays used for Explorer 16 LCD display*/
     char messageLine1[18] ;
@@ -91,7 +109,20 @@ typedef struct
     char messageTime1[18] ;
     char messageTime2[18] ;
     char message1[18] ;
-
+    
+    uint16_t p1Time_currentGame; 
+    uint32_t p1Time_allGames; 
+    uint32_t p1Moves_currentGame;
+    uint32_t p1Moves_allGame;
+    uint16_t p1_score;
+    
+    
+    
+    uint16_t p2Time_currentGame; 
+    uint32_t p2Time_allGames; 
+    uint32_t p2Moves_currentGame;
+    uint32_t p2Moves_allGame;
+    uint16_t p2_score;
 
 
 } APP_DATA ;

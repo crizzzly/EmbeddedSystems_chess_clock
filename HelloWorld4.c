@@ -57,6 +57,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stddef.h>
 #include <stdbool.h>
 #include "app_data.h"
+//#include <player_data.h>
 #include "digitalIO.h"
 
 #define FCY 4000000UL
@@ -68,6 +69,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define ONE_TENTH_VOLT 31
 #define ONE_HUNDREDTH_VOLT 3
 
+#define TIME_5_MIN  1080    //ms = 180 Sek
+#define TIME_15_MIN 32400   //ms = 
+#define TIME_30_MIN 64800
+#define CUSTOM_TIME
+
+#define PLAYER1     0
+#define PLAYER2     1
 
 
 // *****************************************************************************
@@ -80,25 +88,37 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 void Update_LCD ( void ) ;
 void SYS_Initialize ( void ) ;
 extern void Hex2Dec ( unsigned char ) ;
-void setTime(void); 
+void timeMenu(void); 
+void updateTime(void);
+void waitOneSec(void);
+bool checkButton(uint8_t returnString); 
+void startGame(uint16_t time);
+
 
 
 APP_DATA appData = {
-                    .messageLine1    = "Chess Clock IoT3\n" ,
-         /*           
-                    .messageSetTime  = "Set Playtime:\n",
-                    .messageSetTime1 = "5min -> BTN T0",
-                    //.messageSetTime2 = "15 min -> BTN T1\n",
-                    .messageSetTime2 = "15 min -> BTN T1",
-                    .messageSetTime3 = "30 min -> BTN T2",
-                    .messageSetTime4 = "custom -> BTN T3",
-       */        
-                    //.messageTime_P1 = "player 1 \n" ,
-                    //.messageTime_P2 = "Pl2 00: 00: 00   ",
-                    .message1     = "button 1 pressed\n"                            
-} ;
-
-
+    .messageLine1    = "Chess Clock IoT3\n" ,               
+    .messageSetTime  = "Set Playtime:  \n",
+    .messageSetTime1 = "05 min -> BTN T0\n",
+    .messageSetTime2 = "15 min -> BTN T1\n",
+    .messageSetTime3 = "30 min -> BTN T2\n",
+    .messageSetTime4 = "custom -> BTN T3\n",           
+    //.messageTime_P1 = "player 1 \n" ,
+    //.messageTime_P2 = "Pl2 00: 00: 00   ",
+    .message1     = "button 1 pressed\n",
+    
+    .p1Time_currentGame = TIME_5_MIN, 
+    .p1Time_allGames =0, 
+    .p1Moves_currentGame = 0,
+    .p1Moves_allGame = 0,
+    .p1_score = 0,
+    
+    .p2Time_currentGame = TIME_5_MIN, 
+    .p2Time_allGames = 0, 
+    .p2Moves_currentGame = 0,
+    .p2Moves_allGame = 0,
+    .p2_score = 0,
+};
 
 // *****************************************************************************
 // *****************************************************************************
@@ -109,98 +129,23 @@ int main ( void )
 {
     SYS_Initialize ( ) ;
     
-//    digitalWrite(LED200, digitalRead(BTN200));
-//    digitalWrite(LED201, LOW);
-//    digitalWrite(LED202, LOW);
-//    digitalWrite(LED203, LOW);
-    
-    playRandomMelody(); 
-    
-    //setTime(); 
+     
+   
+    timeMenu(); 
     
 
-    /*while(1){
-        //digitalWrite(LED200, digitalRead(BTN200));
-        digitalWrite(LED200, LOW);
-        digitalWrite(LED201, LOW);
-        digitalWrite(LED202, LOW);
-        digitalWrite(LED203, LOW);
-        
-        if(digitalRead(BTN200)){
-          //  digitalWrite(LED200, HIGH);
-            break;
-        }
-        else{
-          //  digitalWrite(LED200, LOW);
-          break;
-        }
-        
-        if (digitalRead(BTN201)){
-            digitalWrite(LED201, HIGH);
-            break;
-        }
-        else{
-            digitalWrite(LED201, LOW);
-            break;
-        }
 
-        if(digitalRead(BTN202)){
-            digitalWrite(LED202,HIGH );
-            break;
-        }
-        else{
-            digitalWrite(LED202, LOW);
-            break;
-        }
-        
-        if(digitalRead(BTN203)){
-            digitalWrite(LED203, HIGH);
-            break;
-        }
-        else{
-            digitalWrite(LED203, LOW);
-            break; 
-        }
-    }*/
-            return 0; 
+    return (EXIT_SUCCESS); 
+}
 
-    }
 
-//    
-//    /* Display welcome message */
-//    LCD_PutString ( (char*) &appData.messageLine1[0] , sizeof (appData.messageLine1 ) - 1  ) ;
-//    LCD_PutString ( (char*) &appData.messageLine2[0] , sizeof (appData.messageLine2 ) - 1  ) ;
-//    
-//    if(BUTTON_IsPressed(BTN_ONB0)) LED_Toggle(LED_ONB0);
-//    /* wait here until switch S3 is pressed */
-//    while (! BUTTON_IsPressed ( BTN_ONB0 ));
-//
-//    /*Initialize Timer*/
-//    TIMER_SetConfig ( TIMER_CONFIG_RTCC ) ;
-//
-//   
-//    /* Display initial ADC and Timer messages */
-//    LCD_PutString ( (char*) &appData.messageTime1[0] , sizeof (appData.messageTime1 ) - 1 ) ;
-//    LCD_PutString ( (char*) &appData.messageTime2[0] , sizeof (appData.messageTime2 ) - 1 ) ;
-//
-//   
-//
-//
-//
-//        /* Infinite Loop */
-//    while ( 1 )
-//    {
-//        LCD_PutString ( (char*) &appData.messageLine2[0] , sizeof (appData.messageLine2 ) - 1  ) ;
-//        /* check if time to update LCD with Timer data */
-//        if ( appData.rtc_lcd_update )
-//        {
-//            Hex2Dec ( appData.hours ) ;
-//            Update_LCD ( ) ;
-//            appData.rtc_lcd_update = 0 ;
-//        }
-//    } 
+void startGame(uint16_t gameTime){
+    appData.p1Time_currentGame = gameTime; 
+    appData.p2Time_currentGame = gameTime; 
     
-
+    
+    
+}
 
 /*******************************************************************************
 
@@ -208,14 +153,11 @@ int main ( void )
    void setTime( void )
 
   Summary:
-    Function to set the game-time
+ updates the time whenever it is colled... will prpbably not count as it should but
+ * won't be called when it's really up to counting seconds
 
   Description:
-    This function will set the time in order to the button, the user pressed
- *          Btn T0 = 3 min
- *          BTN T1 = 15 min
- *          BTN T2 = 30 min
- *          BTN T3 will load the quadratic encoder for the user so he can set time manually
+    
 
   Precondition:
     None.
@@ -231,61 +173,162 @@ int main ( void )
  */
 /******************************************************************************/
 
-void setTime(void){
-    //uint16_t sec = appData.seconds; 
-    //uint16_t oldVal = sec; 
-           // LCD_PutString ( (char*) &appData.messageSetTime[0] , sizeof (appData.messageSetTime ) - 1  ) ;
+void updateTime(void){
+    appData.tens - 0x30; 
+    appData.ones - 0x30; 
+    Hex2Dec(appData.minutes);
 
+    appData.tens - 0x30; 
+    appData.ones - 0x30; 
+    Hex2Dec(appData.seconds);
     
-        /*
-        while((oldVal-10) > sec){
-           sec = appData.seconds ;
-       }
+    appData.tens - 0x30; 
+    appData.ones - 0x30;
+}
+
+/*******************************************************************************
+
+  Function:
+   void setTime( void )
+
+  Summary:
+ uses appData's interrupt flag to wait about one second. 
+
+  Description:
+    
+
+  Precondition:
+    None.
+
+  Parameters:
+    None.
+
+  Returns:
+    None.
+
+  Remarks:
+
+ */
+/******************************************************************************/
+void waitOneSec(void){
+    do {
+        updateTime();
+     } while (!appData.rtc_lcd_update);
+}
+
+
+bool checkButton(uint8_t returnString){
+    PRINT_ClearScreen(); 
+    if (returnString == 1) LCD_PutString("user set time\n", 15 );
+    else {
+        waitOneSec();
+            waitOneSec();
+    }
+    if( digitalRead(BTN200)){
+        LCD_PutString ( "Time set to 5 min" , 18  ) ;
+        startGame(TIME_5_MIN);
+        return true;
+    }
+         
+    else if (digitalRead(BTN201)){
+        LCD_PutString ( "Time set to 15 min" , 18  ) ;
+        startGame(TIME_15_MIN);
+        return true;
+    }
+    else if (digitalRead(BTN202)){
+        LCD_PutString ( "Time set to 30 min" , 18  ) ;
+        startGame(TIME_30_MIN);
+        return true; 
+    }
+    else if (digitalRead(BTN203)){
+        LCD_PutString ( "custom time:     " , 18  ) ;
+
+        return true; 
+    }
+    return false; 
+}
+
+
+
+/*******************************************************************************
+
+  Function:
+   void TimeMenu (void)
+
+  Summary:
+    shows menu to setup GameTime
+
+  Description:
+    This function will update time so the interrupt handler can tell 
+ * when it's time to update lcd so the user can see his options. 
+ * waits for user interaction and sets up the gameTime the user has chosen
+
+  Precondition:
+    None.
+
+  Parameters:
+    None.
+
+  Returns:
+    None.
+
+  Remarks:
+ * CR on Jan/17
+
+ */
+/******************************************************************************/
+
+void timeMenu(void){
+    
+    bool timeSet = false;
+    uint16_t buttonPressed; 
+    while (!timeSet){
         
-        
-        oldVal = sec; 
-        sec = appData.seconds ;
+        appData.rtc_lcd_update = 0; 
+        //PRINT_ClearScreen(); 
+        LCD_PutString ( (char*) &appData.messageSetTime[0] , sizeof (appData.messageSetTime ) - 1  ) ;
         LCD_PutString ( (char*) &appData.messageSetTime1[0] , sizeof (appData.messageSetTime1 ) - 1  ) ;
-        
-        while((oldVal-10) > sec){
-           sec = appData.seconds ;
-       }
-        
-        
-        
-        oldVal = sec; 
-        sec = appData.seconds ;
 
-        //LCD_PutString ( (char*) &appData.messageSetTime[0] , sizeof (appData.messageSetTime ) - 1  ) ;
+        waitOneSec();
+        timeSet = checkButton(1); 
+        
+        waitOneSec();
+        waitOneSec();
+        
+        appData.rtc_lcd_update = 0; 
+        //PRINT_ClearScreen(); 
+        LCD_PutString ( (char*) &appData.messageSetTime[0] , sizeof (appData.messageSetTime ) - 1  ) ;
         LCD_PutString ( (char*) &appData.messageSetTime2[0] , sizeof (appData.messageSetTime2 ) - 1  ) ;
-        
-        while((oldVal-10) > sec){
-           sec = appData.seconds ;
-       }
-        oldVal = sec; 
-        sec = appData.seconds ;
+        waitOneSec();
+        timeSet = checkButton(1); 
 
-        //LCD_PutString ( (char*) &appData.messageSetTime[0] , sizeof (appData.messageSetTime ) - 1  ) ;
+        waitOneSec();
+        waitOneSec();
+        
+        appData.rtc_lcd_update = 0; 
+        //PRINT_ClearScreen(); 
+        LCD_PutString ( (char*) &appData.messageSetTime[0] , sizeof (appData.messageSetTime ) - 1  ) ;
         LCD_PutString ( (char*) &appData.messageSetTime3[0] , sizeof (appData.messageSetTime3 ) - 1  ) ;
+        
+        waitOneSec();
+                timeSet = checkButton(1); 
 
-        while((oldVal-10) > sec){
-           sec = appData.seconds ;
-       }
-        oldVal = sec; 
-        //LCD_PutString ( (char*) &appData.messageSetTime[0] , sizeof (appData.messageSetTime ) - 1  ) ;
+        waitOneSec();
+        waitOneSec();
+        
+        appData.rtc_lcd_update = 0; 
+        //PRINT_ClearScreen(); 
+        LCD_PutString ( (char*) &appData.messageSetTime[0] , sizeof (appData.messageSetTime ) - 1  ) ;
         LCD_PutString ( (char*) &appData.messageSetTime4[0] , sizeof (appData.messageSetTime4 ) - 1  ) ;
-        //__delay_ms(WAIT_MS);
         
-       while((oldVal-10) > sec){
-           sec = appData.seconds ;
-           }
-        oldVal = sec; 
-        sec = appData.seconds ;
-        
-    */
+        timeSet = checkButton(1);         
+    }
+
+}
+
     
        
-}
+
 
 
 /*******************************************************************************
@@ -318,20 +361,20 @@ void Update_LCD ( void ){
     LCD_PutChar ( 'm' ) ;
     LCD_PutChar ( 'e' ) ;
     LCD_PutChar ( ' ' ) ;
-    LCD_PutChar ( appData.tens + 0x30 ) ;
-    LCD_PutChar ( appData.ones + 0x30 ) ;
+    LCD_PutChar ( appData.tens - 0x30 ) ;
+    LCD_PutChar ( appData.ones - 0x30 ) ;
 
     Hex2Dec ( appData.minutes ) ;
     LCD_PutChar ( ':' ) ;
     LCD_PutChar ( ' ' ) ;
-    LCD_PutChar ( appData.tens + 0x30 ) ;
-    LCD_PutChar ( appData.ones + 0x30 ) ;
+    LCD_PutChar ( appData.tens - 0x30 ) ;
+    LCD_PutChar ( appData.ones - 0x30 ) ;
 
     Hex2Dec ( appData.seconds ) ;
     LCD_PutChar ( ':' ) ;
     LCD_PutChar ( ' ' ) ;
-    LCD_PutChar ( appData.tens + 0x30 ) ;
-    LCD_PutChar ( appData.ones + 0x30 ) ;
+    LCD_PutChar ( appData.tens - 0x30 ) ;
+    LCD_PutChar ( appData.ones - 0x30 ) ;
     LCD_PutChar ( ' ' ) ;
 
 }

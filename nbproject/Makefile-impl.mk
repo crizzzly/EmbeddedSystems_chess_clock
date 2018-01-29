@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=HelloWorld4.X
+PROJECTNAME=chess_clock
 
 # Active Configuration
 DEFAULTCONF=default

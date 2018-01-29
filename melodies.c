@@ -13,8 +13,39 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+/*********************************************************************
+* Function: void playDAccord
+*
+* Overview: plays two notes, 2nd higher than first to signalize that system
+ * realized input
+ * because LEDs are broken we have to improvize
+*
+* PreCondition: none
+*
+* Input: - none -
+*
+* Output: - none -
+*
+********************************************************************/
+void playDAccord(void){
+        beep(200, NOTE_C3);
+        beep(600, NOTE_G3);
+    
+}
 
-
+/*********************************************************************
+* Function: void playRandomMelody
+*
+* Overview: plays a really horrible melody by random numbers out of an array of 
+* notes - these should really be changed to better ones
+*
+* PreCondition: none
+*
+* Input: - none -
+*
+* Output: - none -
+*
+********************************************************************/
 
 
 void playRandomMelody(void){

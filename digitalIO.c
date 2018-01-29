@@ -175,16 +175,16 @@ uint8_t digitalRead(uint16_t pin){
             return((LED203_LAT == HIGH) ? true : false) ;
 
         case BTN200:
-            return ((BTN200_PORT == HIGH) ? true : false );
+            return ((BTN200_PORT == HIGH) ? false : true );
 
         case BTN201:
-            return ((BTN201_PORT == HIGH) ? true : false );
+            return ((BTN201_PORT == HIGH) ? false : true );
 
         case BTN202:
-            return ((BTN202_PORT == HIGH) ? true : false );
+            return ((BTN202_PORT == HIGH) ? false : true );
 
         case BTN203:
-            return ((BTN203_PORT == HIGH) ? true : false );
+            return ((BTN203_PORT == HIGH) ? false : true );
     }
     return 0;
 }
