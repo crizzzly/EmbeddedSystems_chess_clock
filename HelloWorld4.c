@@ -77,6 +77,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define PLAYER1     0
 #define PLAYER2     1
 
+#define PROCESS_SET_TIME    1
+#define WAIT_ON_ANY_KEY     2
+#define PROCESS_GAME_PLAY   3
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -88,17 +92,18 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 void Update_LCD ( void ) ;
 void SYS_Initialize ( void ) ;
 extern void Hex2Dec ( unsigned char ) ;
+unsigned char Dec2Hex(uint16_t);
 void timeMenu(void); 
 void updateTime(void);
-void waitOneSec(void);
-bool checkButton(uint8_t returnString); 
-void startGame(uint16_t time);
+void wait(uint16_t);
+void startGame(void);
+void handleButton( void ); 
 
 
 
 APP_DATA appData = {
     .messageLine1    = "Chess Clock IoT3\n" ,               
-    .messageSetTime  = "Set Playtime:  \n",
+    .messageSetTime  = " Set Playtime: \n",
     .messageSetTime1 = "05 min -> BTN T0\n",
     .messageSetTime2 = "15 min -> BTN T1\n",
     .messageSetTime3 = "30 min -> BTN T2\n",
@@ -118,6 +123,8 @@ APP_DATA appData = {
     .p2Moves_currentGame = 0,
     .p2Moves_allGame = 0,
     .p2_score = 0,
+    
+    .btn_pressed = 20
 };
 
 // *****************************************************************************
@@ -129,32 +136,48 @@ int main ( void )
 {
     SYS_Initialize ( ) ;
     
-     
-   
+    LCD_PutString((char *) &appData.messageLine1[0], 18 );
+    LCD_PutString(" ", 18);
+    wait(1);
+    //PRINT_ClearScreen(); 
+    
     timeMenu(); 
+    
+    startGame();    
+    /*
+
+    
+    while (1){
+        Update_LCD();
+        if(digitalRead(BTN200)) appData.activePlayer = 0;
+        if(digitalRead(BTN203)) appData.activePlayer = 1;
+    }
+    
+    timeMenu(); 
+    //while (appData.btn_pressed > BTN203){
+        LCD_ClearScreen();
+        LCD_PutString("push a button to start your game\n", 34 );
+        wait(3);
+        appData.btn_pressed = 20;
+    //}
+        
+    startGame();
+    
+    */
+    
     
 
 
     return (EXIT_SUCCESS); 
 }
 
-
-void startGame(uint16_t gameTime){
-    appData.p1Time_currentGame = gameTime; 
-    appData.p2Time_currentGame = gameTime; 
-    
-    
-    
-}
-
 /*******************************************************************************
 
   Function:
-   void setTime( void )
+   void startGame( uint16_t gameTime )
 
   Summary:
- updates the time whenever it is colled... will prpbably not count as it should but
- * won't be called when it's really up to counting seconds
+ starts the timer for the chess game. 
 
   Description:
     
@@ -173,18 +196,50 @@ void startGame(uint16_t gameTime){
  */
 /******************************************************************************/
 
-void updateTime(void){
-    appData.tens - 0x30; 
-    appData.ones - 0x30; 
-    Hex2Dec(appData.minutes);
-
-    appData.tens - 0x30; 
-    appData.ones - 0x30; 
-    Hex2Dec(appData.seconds);
+void startGame(void){
+//    appData.p1Time_currentGame = TIME_5_MIN; 
+//    appData.p2Time_currentGame = TIME_5_MIN; 
+    appData.activePlayer = 0; //sets player1 as active
+    appData.p1Moves_currentGame = 1;
+    appData.btn_process = PROCESS_GAME_PLAY;
+        LCD_ClearScreen();
+    /*
+    LCD_PutString("press button to start", 22);
+    wait(3);
     
-    appData.tens - 0x30; 
-    appData.ones - 0x30;
+    while(appData.btn_pressed < BTN203){
+        wait(1);
+    }
+    */
+    
+    while (1){
+        //if(digitalRead(BTN200)) appData.activePlayer = 0;
+        //if(digitalRead(BTN203)) appData.activePlayer = 1;
+        
+
+        if(IFS0bits.T1IF == 1)  Update_LCD(); 
+
+        if(appData.btn_pressed == BTN200){
+            appData.btn_pressed = 20;
+            appData.activePlayer = 0;
+            appData.p1Moves_currentGame ++;           
+        }
+                
+        else if(appData.btn_pressed == BTN203){
+            appData.btn_pressed = 20;
+            appData.activePlayer = 1;
+            appData.p2Moves_currentGame ++;           
+        }
+        
+        
+        
+    }
+    
+    
+    
+    
 }
+
 
 /*******************************************************************************
 
@@ -192,16 +247,18 @@ void updateTime(void){
    void setTime( void )
 
   Summary:
- uses appData's interrupt flag to wait about one second. 
+    uses appData's interrupt flag to wait for given amount of seconds. 
 
   Description:
-    
+    updates time until change notification on buttons is detected
+
+    checks if the button was pressed in the meantime and aborts if so
 
   Precondition:
     None.
 
   Parameters:
-    None.
+    uint16_t seconds - amount of seconds to wait
 
   Returns:
     None.
@@ -210,45 +267,101 @@ void updateTime(void){
 
  */
 /******************************************************************************/
-void waitOneSec(void){
-    do {
-        updateTime();
-     } while (!appData.rtc_lcd_update);
+void wait(uint16_t sec){
+    LCD_PutString("Entering wait seq", 18 );
+    uint8_t i = 0; 
+    appData.rtc_lcd_update = 0;
+    while(i<sec){
+        if(appData.btn_pressed > BTN203){
+            do {
+               //updateTime();
+            } while (!appData.rtc_lcd_update); 
+            appData.rtc_lcd_update = 0; 
+            i++;
+        }
+          
+        else{
+             appData.rtc_lcd_update = 0;   
+            return ; 
+        }
+        
+    }
+        LCD_PutString("Leaving wait seq", 18 );   
 }
 
 
-bool checkButton(uint8_t returnString){
-    PRINT_ClearScreen(); 
-    if (returnString == 1) LCD_PutString("user set time\n", 15 );
-    else {
-        waitOneSec();
-            waitOneSec();
-    }
-    if( digitalRead(BTN200)){
-        LCD_PutString ( "Time set to 5 min" , 18  ) ;
-        startGame(TIME_5_MIN);
-        return true;
-    }
-         
-    else if (digitalRead(BTN201)){
-        LCD_PutString ( "Time set to 15 min" , 18  ) ;
-        startGame(TIME_15_MIN);
-        return true;
-    }
-    else if (digitalRead(BTN202)){
-        LCD_PutString ( "Time set to 30 min" , 18  ) ;
-        startGame(TIME_30_MIN);
-        return true; 
-    }
-    else if (digitalRead(BTN203)){
-        LCD_PutString ( "custom time:     " , 18  ) ;
 
-        return true; 
+void handleButton( ){
+   
+    if(appData.btn_process == PROCESS_SET_TIME){
+        if(appData.btn_pressed == BTN200) {
+            LCD_PutString("handle Button?\t\n", 18); 
+            LCD_PutString("btn0 \t\n", 18);
+
+             appData.btn_pressed= 20;    
+
+
+
+            appData.p1Time_currentGame = TIME_5_MIN;
+            appData.p1_hours = 0x0; 
+            appData.p1_minutes = 0x05; 
+            appData.p1_seconds = 0x0; 
+            
+            appData.p2Time_currentGame = TIME_5_MIN;
+            appData.p2_hours = 0x0; 
+            appData.p2_minutes = 0x05; 
+            appData.p2_seconds = 0x0; 
+            startGame(); 
+        }
+        else if (appData.btn_pressed == BTN201){
+            LCD_PutString("handle Button\n", 18);
+            LCD_PutString("btn1 \n", 18);
+            appData.btn_pressed= 20;    
+
+            appData.p1Time_currentGame = TIME_15_MIN;
+            appData.p1_hours = 0; //x0; 
+            appData.p1_minutes = 0xf; //0xf; 
+            appData.p1_seconds = 0; //x0;
+
+            appData.p2Time_currentGame = TIME_15_MIN;
+            appData.p2_hours = 0; //x0; 
+            appData.p2_minutes = 0xf; //0xf; 
+            appData.p2_seconds = 0; //x0;
+
+                        startGame(); 
+
+        }
+
+        else if (appData.btn_pressed == BTN202){
+              LCD_PutString("handle Button\n", 18);
+                LCD_PutString("btn2 \n", 18);
+
+            appData.btn_pressed= 20;    
+
+            appData.p1Time_currentGame = TIME_30_MIN;
+            appData.p1_hours = 0; //0x0; 
+            appData.p1_minutes = 0x1e; //0x1e; 
+            appData.p1_seconds = 0; //0x0;
+
+            appData.p2Time_currentGame = TIME_30_MIN;
+            appData.p2_hours = 0; 
+            appData.p2_minutes = 0x1e; //0x1e; 
+            appData.p2_seconds = 0;
+            startGame(); 
+
+        }
+
+
+        else if (appData.btn_pressed == BTN203){
+              LCD_PutString("handle Button\n", 18);
+                LCD_PutString("btn3 \n", 18);
+               appData.btn_pressed= 20;    
+
+            timeMenu();
+        }
+        
     }
-    return false; 
 }
-
-
 
 /*******************************************************************************
 
@@ -257,11 +370,9 @@ bool checkButton(uint8_t returnString){
 
   Summary:
     shows menu to setup GameTime
-
+ *  
   Description:
-    This function will update time so the interrupt handler can tell 
- * when it's time to update lcd so the user can see his options. 
- * waits for user interaction and sets up the gameTime the user has chosen
+    
 
   Precondition:
     None.
@@ -279,51 +390,36 @@ bool checkButton(uint8_t returnString){
 /******************************************************************************/
 
 void timeMenu(void){
+    /*give btn_pressed a value greater than the highest value of the buttons
+     actually:  4-9 (uint16_t) */
     
-    bool timeSet = false;
-    uint16_t buttonPressed; 
-    while (!timeSet){
+    appData.btn_pressed = 20;
+    //LCD_ClearScreen();
+    LCD_PutString("entering timeMenu", 18);
+    appData.btn_process = PROCESS_SET_TIME;
+    while (appData.btn_pressed > BTN203){
         
         appData.rtc_lcd_update = 0; 
+        LCD_ClearScreen();
         //PRINT_ClearScreen(); 
+        LCD_SetPosition(0, 0);
         LCD_PutString ( (char*) &appData.messageSetTime[0] , sizeof (appData.messageSetTime ) - 1  ) ;
-        LCD_PutString ( (char*) &appData.messageSetTime1[0] , sizeof (appData.messageSetTime1 ) - 1  ) ;
-
-        waitOneSec();
-        timeSet = checkButton(1); 
-        
-        waitOneSec();
-        waitOneSec();
-        
-        appData.rtc_lcd_update = 0; 
-        //PRINT_ClearScreen(); 
+          LCD_PutString ( (char*) &appData.messageSetTime1[0] , sizeof (appData.messageSetTime1 ) - 1  ) ;
+ 
+        wait(2);
         LCD_PutString ( (char*) &appData.messageSetTime[0] , sizeof (appData.messageSetTime ) - 1  ) ;
-        LCD_PutString ( (char*) &appData.messageSetTime2[0] , sizeof (appData.messageSetTime2 ) - 1  ) ;
-        waitOneSec();
-        timeSet = checkButton(1); 
+        LCD_PutString ( (char*) &appData.messageSetTime2[0] , sizeof (appData.messageSetTime2 ) - 1  ) ;        
 
-        waitOneSec();
-        waitOneSec();
-        
-        appData.rtc_lcd_update = 0; 
-        //PRINT_ClearScreen(); 
+        wait(2);
         LCD_PutString ( (char*) &appData.messageSetTime[0] , sizeof (appData.messageSetTime ) - 1  ) ;
         LCD_PutString ( (char*) &appData.messageSetTime3[0] , sizeof (appData.messageSetTime3 ) - 1  ) ;
         
-        waitOneSec();
-                timeSet = checkButton(1); 
-
-        waitOneSec();
-        waitOneSec();
-        
-        appData.rtc_lcd_update = 0; 
-        //PRINT_ClearScreen(); 
+        wait(2);
         LCD_PutString ( (char*) &appData.messageSetTime[0] , sizeof (appData.messageSetTime ) - 1  ) ;
-        LCD_PutString ( (char*) &appData.messageSetTime4[0] , sizeof (appData.messageSetTime4 ) - 1  ) ;
-        
-        timeSet = checkButton(1);         
+          LCD_PutString ( (char*) &appData.messageSetTime4[0] , sizeof (appData.messageSetTime4 ) - 1  ) ;       
+      wait(2);
     }
-
+        handleButton(); 
 }
 
     
@@ -356,26 +452,52 @@ void timeMenu(void){
  */
 /******************************************************************************/
 void Update_LCD ( void ){
-    LCD_PutChar ( 'T' ) ;
-    LCD_PutChar ( 'i' ) ;
-    LCD_PutChar ( 'm' ) ;
-    LCD_PutChar ( 'e' ) ;
+      //}
+    Hex2Dec ( appData.p2_hours ) ;
+    LCD_PutChar ( 'P' ) ;
+    LCD_PutChar ( 'l' ) ;
+    LCD_PutChar ( '.' ) ;
+    LCD_PutChar ( '2' ) ;
     LCD_PutChar ( ' ' ) ;
-    LCD_PutChar ( appData.tens - 0x30 ) ;
-    LCD_PutChar ( appData.ones - 0x30 ) ;
+    LCD_PutChar ( appData.tens + 0x30 ) ;
+    LCD_PutChar ( appData.ones + 0x30 ) ;
 
-    Hex2Dec ( appData.minutes ) ;
+    Hex2Dec ( appData.p2_minutes ) ;
     LCD_PutChar ( ':' ) ;
     LCD_PutChar ( ' ' ) ;
-    LCD_PutChar ( appData.tens - 0x30 ) ;
-    LCD_PutChar ( appData.ones - 0x30 ) ;
+    LCD_PutChar ( appData.tens + 0x30 ) ;
+    LCD_PutChar ( appData.ones + 0x30 ) ;
 
-    Hex2Dec ( appData.seconds ) ;
+    Hex2Dec ( appData.p2_seconds ) ;
     LCD_PutChar ( ':' ) ;
     LCD_PutChar ( ' ' ) ;
-    LCD_PutChar ( appData.tens - 0x30 ) ;
-    LCD_PutChar ( appData.ones - 0x30 ) ;
+    LCD_PutChar ( appData.tens + 0x30 ) ;
+    LCD_PutChar ( appData.ones + 0x30 ) ;
     LCD_PutChar ( ' ' ) ;
+    
+    
+    Hex2Dec ( appData.p1_hours ) ;
+    LCD_PutChar ( 'P' ) ;
+    LCD_PutChar ( 'l' ) ;
+    LCD_PutChar ( '.' ) ;
+    LCD_PutChar ( '1' ) ;
+    LCD_PutChar ( ' ' ) ;
+    LCD_PutChar ( appData.tens + 0x30 ) ;
+    LCD_PutChar ( appData.ones + 0x30 ) ;
+
+    Hex2Dec ( appData.p1_minutes ) ;
+    LCD_PutChar ( ':' ) ;
+    LCD_PutChar ( ' ' ) ;
+    LCD_PutChar ( appData.tens + 0x30 ) ;
+    LCD_PutChar ( appData.ones + 0x30 ) ;
+
+    Hex2Dec ( appData.p1_seconds ) ;
+    LCD_PutChar ( ':' ) ;
+    LCD_PutChar ( ' ' ) ;
+    LCD_PutChar ( appData.tens + 0x30 ) ;
+    LCD_PutChar ( appData.ones + 0x30 ) ;
+    LCD_PutChar ( ' ' ) ;
+    //}
 
 }
 
@@ -408,32 +530,55 @@ void Update_LCD ( void ){
 
 void Hex2Dec ( unsigned char count )
 {
-    /* reset values */
+
     appData.hunds = 0 ;
     appData.tens  = 0 ;
     appData.ones = 0 ;
-
-    while ( count >= 10 )
-    {
-
-        if ( count >= 200 )
+  
+    
+        while ( count >= 10 )
         {
-            count -= 200 ;
-            appData.hunds = 0x02 ;
-        }
+            if ( count >= 200 )
+            {
+                count -= 200 ;
+                appData.hunds = 0x02 ;
+              
+            }
 
-        if (count >= 100)
-        {
-            count -= 100 ;
-            appData.hunds++ ;
-        }
+            if (count >= 100)
+            {
+                count -= 100 ;
+                appData.hunds++ ;
 
-        if (count >= 10 )
-        {
-            count -= 10 ;
-            appData.tens++ ;
+            }
+
+            if (count >= 10 )
+            {
+                count -= 10 ;
+                appData.tens++ ;
+            }
         }
-    }
 
     appData.ones = count ;
+}
+
+
+
+unsigned char Dec2Hex(uint16_t no){
+  //decimal passed should be in range 0 to 153
+   // char hex [] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F}; 
+    int hex=0;
+    if(!no)
+        return 0;
+    else {
+        hex=no%16;
+        Dec2Hex(no/16);
+    }
+    if(hex>9)
+        return ('A'+(hex-10));
+    else
+        return (hex);
+  
+
+
 }

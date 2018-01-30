@@ -5,4 +5,5 @@ lcd.h  \
 timer.h  \
  print_lcd.h  \
 myxc.h  \
-digitalIO.h 
+digitalIO.h  \
+melodies.h 

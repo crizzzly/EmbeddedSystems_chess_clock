@@ -64,31 +64,33 @@
 
 typedef struct
 {
-    /* Variables used by Timer module */
+    /* Variables used by Timer module
     volatile unsigned char hours ;
     volatile unsigned char minutes ;
     volatile unsigned char seconds ;
+     * */
     volatile unsigned char hunds ;
     volatile unsigned char tens ;
     volatile unsigned char ones ;
-    volatile unsigned char rtc_lcd_update ;
-    
     /* Variables used by Timer module */
+    
+    volatile unsigned char rtc_lcd_update ;
+
     volatile unsigned char p1_hours ;
     volatile unsigned char p1_minutes ;
     volatile unsigned char p1_seconds ;
-    volatile unsigned char p1_hunds ;
-    volatile unsigned char p1_tens ;
-    volatile unsigned char p1_ones ;
+//    volatile unsigned char p1_hunds ;
+//    volatile unsigned char p1_tens ;
+//    volatile unsigned char p1_ones ;
     volatile unsigned char p1_rtc_lcd_update ;
     
     /* Variables used by Timer module */
     volatile unsigned char p2_hours ;
     volatile unsigned char p2_minutes ;
     volatile unsigned char p2_seconds ;
-    volatile unsigned char p2_hunds ;
-    volatile unsigned char p2_tens ;
-    volatile unsigned char p2_ones ;
+//    volatile unsigned char p2_hunds ;
+//    volatile unsigned char p2_tens ;
+//    volatile unsigned char p2_ones ;
     volatile unsigned char p2_rtc_lcd_update ;
     
 
@@ -110,19 +112,23 @@ typedef struct
     char messageTime2[18] ;
     char message1[18] ;
     
+    uint8_t activePlayer; 
+    
     uint16_t p1Time_currentGame; 
     uint32_t p1Time_allGames; 
     uint32_t p1Moves_currentGame;
     uint32_t p1Moves_allGame;
     uint16_t p1_score;
-    
-    
-    
+        
     uint16_t p2Time_currentGame; 
     uint32_t p2Time_allGames; 
     uint32_t p2Moves_currentGame;
     uint32_t p2Moves_allGame;
     uint16_t p2_score;
+
+    //pseudo interrupt flag for button
+    volatile uint16_t btn_pressed ;
+    volatile uint16_t btn_process; 
 
 
 } APP_DATA ;

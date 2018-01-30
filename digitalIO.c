@@ -63,7 +63,6 @@
 #define LED202_CNEN CNENBbits.CNIEB10
 #define LED203_CNEN CNENBbits.CNIEB11
 
-
 #define LED200_CNPU CNPUBbits.CNPUB8
 #define LED201_CNPU CNPUBbits.CNPUB9
 #define LED202_CNPU CNPUBbits.CNPUB10
@@ -74,11 +73,26 @@
 #define LED202_CNPD CNPDBbits.CNPDB10
 #define LED203_CNPD CNPDBbits.CNPDB11
 
+//piezo
 #define PIEZ_ANS    ANSELGbits.ANSG8
 #define PIEZ_TRIS   TRISGbits.TRISG8
 #define PIEZ_CNEN   CNENGbits.CNIEG8
 #define PIEZ_PORT   PORTGbits.RG8
 #define PIEZ_LAT    LATGbits.LATG9
+
+
+//rotary encoder
+#define RSW204_INC_A    PORTGbits.RG0
+#define RSW204_INC_B    PORTGbits.RG1
+#define RSW204_INC_SW   PORTGbits.RG9
+#define RSW204_ANS      ANSELGbits.ANSG9
+#define RSW204_TRIS0    TRISGbits.TRISG0
+#define RSW204_TRIS1    TRISGbits.TRISG1
+#define RSW204_TRIS9    TRISGbits.TRISG9
+#define RSW204_CNPUG0   CNPUGbits.CNPUG0
+#define RSW204_CNPUG1   CNPUGbits.CNPUG1
+#define RSW204_CNPUG9   CNPUGbits.CNPUG9
+
 
 
 
@@ -122,18 +136,22 @@ void pinMode(uint16_t pin, uint8_t value){
 
 
         case BTN200:
-            
-            BTN200_TRIS = value;
-            BTN200_CNEN = 0;
-            BTN200_CNPU = 0;
-            BTN200_CNPD = 0;
             BTN200_LAT  = 0;
+            BTN200_TRIS = value;
+            BTN200_CNEN = 1;
+            BTN200_CNPU = 1;
+            BTN200_CNPD = 0;
+            
+            IPC4bits.CNIP = 4;     //set interrupt priority 
+            IEC1bits.CNIE = 1; 		// Enable CN interrupts
+            IFS1bits.CNIF = 0; 		// Reset CN interrupt flag
+            
             break;
             
         case BTN201:
             BTN201_TRIS = value;
-            BTN201_CNEN = 0;
-            BTN201_CNPU = 0;
+            BTN201_CNEN = 1;
+            BTN201_CNPU = 1;
             BTN201_CNPD = 0;
             BTN201_LAT  = 0;
             break;
@@ -141,7 +159,7 @@ void pinMode(uint16_t pin, uint8_t value){
             
         case BTN202:
             BTN202_TRIS = value;
-            BTN202_CNEN = 0;
+            BTN202_CNEN = 1;
             BTN202_CNPU = 1;
             BTN202_CNPD = 0;
             BTN201_LAT  = 0;
@@ -150,11 +168,31 @@ void pinMode(uint16_t pin, uint8_t value){
             
         case BTN203:
             BTN203_TRIS = value;
-            BTN203_CNEN = 0;
+            BTN203_CNEN = 1;
             BTN203_CNPU = 1;
             BTN203_CNPD = 0;
             BTN203_LAT  = 0;
             break;
+            
+               /*Input Capture 3, Vec: 45, IRQ: 37, IVT Adr: 0x00005E 	
+            //flag at:IFS2<5>, enable at:IEC2<5>, prio:IPC9<6:4>            
+            
+            IC1  IFS0<1> 	IEC0<1>         IPC0<6:4>
+            IFS0bits.IC1IF  IEC0bits.IC1IE  IC1IP
+
+            IC7 IFS1<6>		IEC1<6>         IPC5<10:8>
+            IFS1bits.IC7IF  IEC1bits.IC7IE  IC7IP
+            IC8	IFS1<7> 	IEC1<7> 	IPC5<14:12>
+            */
+        case RSW204:
+            RSW204_ANS  = 0; 
+            RSW204_TRIS0 = 1;
+            RSW204_TRIS1 = 1;
+            RSW204_TRIS9 = 1;
+            RSW204_CNPUG0 = 1;
+            RSW204_CNPUG1 = 1;
+            RSW204_CNPUG9 = 1;
+            
         }
                     
     }
@@ -185,8 +223,48 @@ uint8_t digitalRead(uint16_t pin){
 
         case BTN203:
             return ((BTN203_PORT == HIGH) ? false : true );
+        case INC_A:
+            return((RSW204_INC_A == HIGH) ? true : false);
+        case INC_B:
+            return((RSW204_INC_B == HIGH) ? true : false);
+            
+        case INC_SW:
+            return((RSW204_INC_SW == HIGH) ? true : false);
     }
     return 0;
+    
+/*********************************************************************
+* Function: int8_t readRotaryEncPulse();
+*
+* Overview: checks weather the val of inc_a has changed and if an 
+ * direction switch has occured. if not returns 0
+ * 
+*
+*
+* Input: None
+*
+* Output: value: "  -1"  if direction is backwards 
+ *        value:    1      if direction is forward
+ *        value:    0       if nothing happened
+*
+********************************************************************/
+
+    int8_t readRotaryEncPulse(){
+        bool inc_a = digitalRead(INC_A);
+        while (inc_a == digitalRead(INC_A)){
+            if(!digitalRead(INC_SW)){
+                return 0; 
+            }
+        }
+        
+        //Returns -1 if rotating backwards and 1 if forwards
+        if(!inc_a == digitalRead(INC_B)){
+            return -1; 
+        }
+        else{
+            return 1; 
+        }
+    }
 }
     
     /*********************************************************************
@@ -226,14 +304,36 @@ uint8_t digitalRead(uint16_t pin){
         LATB |= (value << 8); // set bits again
     }
 
-    
-    
+/****************************************************
+ Function:
+ void initPiezo( void )
 
+  Summary:
+    Initializes Piezo     
+  Description:
+    Initializes the pins of piezo 
+ *      ANSEL - analogSelect 0 = digital
+ *      TRIS -  I/O select 0 = output
+ *      CNEN -  enable interrupt 0 = no interrupts
+
+  Precondition:
+    The Timer peripheral must have been initialized for Timer 3.
+
+  Parameters:
+    None.
+
+  Returns:
+    None.
+
+  Remarks:
+    None
+ 
+ **********************************************************************/    
 void initPiezo() {
     //Piezo Output
-    PIEZ_ANS = 0;  //
-    PIEZ_TRIS = 0;
-    PIEZ_CNEN = 0;
+    PIEZ_ANS = 0;   //analogSelect to digital
+    PIEZ_TRIS = 0;  //I/O select as output
+    PIEZ_CNEN = 0;  //no interrupt
 }
 
 

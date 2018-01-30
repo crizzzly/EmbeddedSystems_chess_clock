@@ -15,6 +15,7 @@
 #include "app_data.h"
 #include "myxc.h"
 #include "digitalIO.h"
+#include "melodies.h"
 // ****************************************************************************
 // ****************************************************************************
 // Section: File Scope Functions
@@ -26,6 +27,7 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _OscillatorFail ( void ) ;
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AddressError ( void ) ;
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _StackError ( void ) ;
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _MathError ( void ) ;
+void __attribute__ ( ( __interrupt__ , auto_psv ) ) _IC3Interrupt ( void ) ;
 
 // ****************************************************************************
 // ****************************************************************************
@@ -140,39 +142,67 @@ void SOSC_Configuration ( void )
  */
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _T1Interrupt ( void )
 {
-    /* update seconds */
-    if ( appData.seconds >= 0 )
-    {
-        appData.seconds-- ;
-    }
-        /* update minutes */
-    else
-    {
-        appData.seconds = 0x3c ;
-        if ( appData.minutes >= 0 )
+    if (appData.activePlayer == 1){
+        /* update seconds */
+        if ( appData.p2_seconds > 0x00 )
         {
-            appData.minutes-- ;
+            appData.p2_seconds-- ;
         }
-            /* update hours */
+            /* update minutes */
         else
         {
-            appData.minutes = 0x3c ;
-            if ( appData.hours >= 00 )
+            appData.p2_seconds = 0x3B ;
+            if ( appData.p1_minutes > 0x00 )
             {
-                appData.hours -- ;
+                appData.p2_minutes-- ;
             }
+                /* update hours */
             else
             {
-                appData.hours = 0x1 ;
+                appData.p2_minutes = 0x3B ;
+                if ( appData.p1_hours > 0x00 )
+                {
+                    appData.p2_hours -- ;
+                }
+                else
+                {
+                    appData.p2_hours = 0x17 ;
+                }
+            }
+        }
+    }
+    else{
+        /* update seconds */
+        if ( appData.p1_seconds > 0x00 )
+        {
+            appData.p1_seconds-- ;
+        }
+            /* update minutes */
+        else
+        {
+            appData.p1_seconds = 0x3B ;
+            if ( appData.p1_minutes > 0x00 )
+            {
+                appData.p1_minutes-- ;
+            }
+                /* update hours */
+            else
+            {
+                appData.p1_minutes = 0x3B ;
+                if ( appData.p1_hours > 0x00 )
+                {
+                    appData.p1_hours -- ;
+                }
+                else
+                {
+                    appData.p1_hours = 0x17 ;
+                }
             }
         }
     }
 
     /* set flag to update LCD */
     appData.rtc_lcd_update = 1 ;
-
-    /* Toggle LED at 1 Hz rate */
-    //LED_Toggle ( LED_ONB0 ) ;
 
     /* reset Timer 1 interrupt flag */
     IFS0bits.T1IF = 0 ;
@@ -203,6 +233,7 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _T1Interrupt ( void )
 
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _OscillatorFail ( void )
 {
+    LCD_PutString("OSC FAIL", 18);
     INTCON1bits.OSCFAIL = 0 ;        //Clear the trap flag
     while (1) ;
 }
@@ -226,6 +257,7 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _OscillatorFail ( void )
 
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AddressError ( void )
 {
+    LCD_PutString("ADDR ERR", 18);
     INTCON1bits.ADDRERR = 0 ;        //Clear the trap flag
     while (1) ;
 }
@@ -249,6 +281,8 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AddressError ( void )
 
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _StackError ( void )
 {
+        LCD_PutString("STACK ERR", 18);
+
     INTCON1bits.STKERR = 0 ;         //Clear the trap flag
     while (1) ;
 }
@@ -274,4 +308,31 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _MathError ( void )
 {
     INTCON1bits.MATHERR = 0 ;        //Clear the trap flag
     while (1) ;
+}
+
+
+void __attribute__ ( ( __interrupt__ , auto_psv ) ) _CNInterrupt (void) 
+{     
+    LCD_PutString("interrupted! ", 36);
+    if(digitalRead(BTN200)){
+        appData.btn_pressed = BTN200; 
+       }
+    else if(digitalRead(BTN201)){
+        appData.btn_pressed = BTN201; 
+
+       }
+    else if(digitalRead(BTN202)){
+        appData.btn_pressed = BTN202; 
+
+       }
+    else if(digitalRead(BTN203)){
+        appData.btn_pressed = BTN203;
+    }
+
+    //Reset change notification interrupt flag
+    IFS1bits.CNIF = 0; 
+
+    playDAccord();
+
+    handleButton(); 
 }

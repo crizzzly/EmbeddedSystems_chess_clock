@@ -235,6 +235,28 @@ void LCD_ClearScreen ( void )
     column = 0 ;
 }
 
+/*********************************************************************
+ * Function: void LCD_ClearScreen(void);
+ *
+ * Overview: Sets the cursor to specified pos, if possible.
+ *
+ * PreCondition: already initialized via LCD_Initialize()
+ *
+ * Input: uint8_t r = row to set the cursor to
+ *        uint8_t c = column to set the cursor to  
+ *
+ * Output: None
+ *
+ ********************************************************************/
+void LCD_SetPosition ( uint8_t r, uint8_t c )
+{
+    LCD_SendCommand ( LCD_COMMAND_CLEAR_SCREEN , LCD_S_INSTR ) ;
+    LCD_SendCommand ( LCD_COMMAND_RETURN_HOME , LCD_S_INSTR) ;
+
+    row = c ;
+    column = c ;
+}
+
 
 /*******************************************************************/
 /*******************************************************************/

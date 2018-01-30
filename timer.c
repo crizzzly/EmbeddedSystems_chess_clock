@@ -176,7 +176,7 @@ bool TIMER_SetConfig(TIMER_CONFIGURATIONS config){
  * Function: 
  *      void __attribute__ ((__interrupt__, auto psy)) __T3Interrupt (void)
  * 
- * Overview: Interrupt handler for timer3
+ * Overview: Interrupt handler for timer3 which is connected to timer 1
  * 
  * PreCondition: none
  * 

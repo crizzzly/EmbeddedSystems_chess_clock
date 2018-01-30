@@ -23,18 +23,25 @@
 #define INPUT   1
 #define OUTPUT  0
 
-#define HIGH 1
-#define LOW 0
+#define HIGH    1
+#define LOW     0
 
-#define LED200 0
-#define LED201 1
-#define LED202 2
-#define LED203 3
-#define BTN200 4
-#define BTN201 5
-#define BTN202 6
-#define BTN203 7
-#define BTN204 8
+#define LED200  0
+#define LED201  1
+#define LED202  2
+#define LED203  3
+
+#define BTN200  4
+#define BTN201  5
+#define BTN202  6
+#define BTN203  7
+
+#define PZ200   9
+#define RSW204   10
+
+#define INC_A   11 //incrementing in Dir A
+#define INC_B   12 //incrementing in Dir B
+#define INC_SW  13 //switching directions
 
 
 #define LED_COUNT 4
@@ -52,6 +59,8 @@ void digitalWrite(uint16_t pin, uint8_t value);
 
 //enables/disables all onboard LEDs
 void writeAllLED(uint8_t value); 
+
+int8_t readRotaryEncPulse(void); 
 
 #endif	/* XC_HEADER_TEMPLATE_H */
 
