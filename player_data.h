@@ -34,46 +34,28 @@
 #define	PLAYER_DATA_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
-
+#include <stdint.h>
 
 
 typedef struct{
-            //uint16_t time_left,
-            //uint16_t time_current_session,
-            //uint16_t score;
+            uint32_t    time_all_sessions;
+            uint16_t    time_current_session;
+            uint16_t    moves_current_session; 
+            uint16_t    moves_all_sessions; 
+            uint8_t     is_active;        
+            uint16_t    score;
+            
+            //for timer module: 
+            volatile unsigned char  hours ;
+            volatile unsigned char  minutes ;
+            volatile unsigned char  seconds;             
+                    
+                    
 }PLAYER_DATA;
 
-extern PLAYER_DATA player1; 
-extern PLAYER_DATA player2; 
-// TODO Insert appropriate #include <>
+extern PLAYER_DATA p1; 
+extern PLAYER_DATA p2; 
 
-// TODO Insert C++ class definitions if appropriate
-
-// TODO Insert declarations
-
-// Comment a function and leverage automatic documentation with slash star star
-/**
-    <p><b>Function prototype:</b></p>
-  
-    <p><b>Summary:</b></p>
-
-    <p><b>Description:</b></p>
-
-    <p><b>Precondition:</b></p>
-
-    <p><b>Parameters:</b></p>
-
-    <p><b>Returns:</b></p>
-
-    <p><b>Example:</b></p>
-    <code>
- 
-    </code>
-
-    <p><b>Remarks:</b></p>
- */
-// TODO Insert declarations or function prototypes (right here) to leverage 
-// live documentation
 
 #ifdef	__cplusplus
 extern "C" {

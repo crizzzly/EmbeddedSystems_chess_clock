@@ -68,6 +68,20 @@ void LCD_PutString(char* inputString, uint16_t length);
 void LCD_PutChar(char);
 
 /*********************************************************************
+* Function: void LCD_SetPosition(uint8_t, uint8_t);
+*
+* Overview: If possible, sets the cursor to user given row /column
+ * 
+* PreCondition: already initialized via LCD_Initialize()
+*
+* Input:    uint8_t r = row the cursor will be set
+*           uint8_t c = column the cursor will be set     
+* Output: None
+*
+********************************************************************/
+void LCD_SetPosition(uint8_t, uint8_t);
+
+/*********************************************************************
 * Function: void LCD_ClearScreen(void);
 *
 * Overview: Clears the screen, if possible.

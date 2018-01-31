@@ -31,6 +31,7 @@
       <itemPath>melodies.c</itemPath>
       <itemPath>music.h</itemPath>
       <itemPath>melodies.h</itemPath>
+      <itemPath>player_data.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

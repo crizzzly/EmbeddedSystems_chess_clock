@@ -174,6 +174,9 @@ void pinMode(uint16_t pin, uint8_t value){
             BTN203_LAT  = 0;
             break;
             
+        default:
+            printf("this pin is not configured");
+            
                /*Input Capture 3, Vec: 45, IRQ: 37, IVT Adr: 0x00005E 	
             //flag at:IFS2<5>, enable at:IEC2<5>, prio:IPC9<6:4>            
             
@@ -230,6 +233,9 @@ uint8_t digitalRead(uint16_t pin){
             
         case INC_SW:
             return((RSW204_INC_SW == HIGH) ? true : false);
+        default:
+            printf("this pin is not available as input");
+            break; 
     }
     return 0;
     
@@ -294,6 +300,7 @@ uint8_t digitalRead(uint16_t pin){
                 LED203_LAT = value;
                 break;
             default:
+                printf("this pin is not available as output");
                 break;
         }
         

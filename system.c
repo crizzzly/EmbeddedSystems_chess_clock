@@ -13,6 +13,7 @@
 
 #include <xc.h>
 #include "app_data.h"
+#include "player_data.h"
 #include "myxc.h"
 #include "digitalIO.h"
 #include "melodies.h"
@@ -142,60 +143,82 @@ void SOSC_Configuration ( void )
  */
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _T1Interrupt ( void )
 {
-    if (appData.activePlayer == 1){
+    if (p2.is_active){
         /* update seconds */
-        if ( appData.p2_seconds > 0x00 )
+        if ( p2.seconds > 0x00 )
         {
-            appData.p2_seconds-- ;
+            p2.seconds-- ;
         }
             /* update minutes */
         else
         {
-            appData.p2_seconds = 0x3B ;
-            if ( appData.p1_minutes > 0x00 )
+            p2.seconds = 0x3B ;
+            if ( p2.minutes > 0x00 )
             {
-                appData.p2_minutes-- ;
+                p2.minutes-- ;
             }
                 /* update hours */
             else
             {
-                appData.p2_minutes = 0x3B ;
-                if ( appData.p1_hours > 0x00 )
+                p2.minutes = 0x3B ;
+                if ( p2.hours > 0x00 )
                 {
-                    appData.p2_hours -- ;
+                    p2.hours -- ;
                 }
-                else
-                {
-                    appData.p2_hours = 0x17 ;
+                else {
+                    p2.hours = 0x17 ;
                 }
             }
         }
     }
-    else{
+    else if(p1.is_active)
+                {
         /* update seconds */
-        if ( appData.p1_seconds > 0x00 )
+        if ( p1.seconds > 0x00 )
         {
-            appData.p1_seconds-- ;
+            p1.seconds-- ;
         }
             /* update minutes */
         else
         {
-            appData.p1_seconds = 0x3B ;
-            if ( appData.p1_minutes > 0x00 )
+            p1.seconds = 0x3B ;
+            if ( p1.minutes > 0x00 )
             {
-                appData.p1_minutes-- ;
+                p1.minutes-- ;
             }
                 /* update hours */
             else
             {
-                appData.p1_minutes = 0x3B ;
-                if ( appData.p1_hours > 0x00 )
+                p1.minutes = 0x3B ;
+                if ( p1.hours > 0x00 )
                 {
-                    appData.p1_hours -- ;
+                    p1.hours -- ;
                 }
                 else
                 {
-                    appData.p1_hours = 0x17 ;
+                    p1.hours = 0x17 ;
+                }
+            }
+        }
+    }
+    else {
+        if ( appData.seconds < 59 ){
+            appData.seconds ++ ;
+        }
+            /* update minutes */
+        else{
+            appData.seconds = 0 ;
+            if ( appData.minutes < 59 ){
+                appData.minutes ++ ;
+            }
+                /* update hours */
+            else{
+                appData.minutes = 0 ;
+                if ( appData.hours < 24 ) {
+                    appData.hours ++ ;
+                }
+                else {
+                    appData.hours = 0 ;
                 }
             }
         }
@@ -313,26 +336,27 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _MathError ( void )
 
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _CNInterrupt (void) 
 {     
-    LCD_PutString("interrupted! ", 36);
+   // LCD_PutString("interrupted! ", 36);
+    appData.btn_pressed = 1; 
     if(digitalRead(BTN200)){
-        appData.btn_pressed = BTN200; 
+        appData.btn200_pressed = true; 
        }
     else if(digitalRead(BTN201)){
-        appData.btn_pressed = BTN201; 
+        appData.btn201_pressed = true; 
 
        }
     else if(digitalRead(BTN202)){
-        appData.btn_pressed = BTN202; 
+        appData.btn202_pressed = true; 
 
        }
     else if(digitalRead(BTN203)){
-        appData.btn_pressed = BTN203;
+        appData.btn203_pressed = true;
     }
+    playDAccord();
 
     //Reset change notification interrupt flag
     IFS1bits.CNIF = 0; 
 
-    playDAccord();
 
-    handleButton(); 
+    //handleButton(); 
 }
