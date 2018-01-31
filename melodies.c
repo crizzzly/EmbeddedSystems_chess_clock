@@ -29,8 +29,20 @@
 ********************************************************************/
 void playDAccord(void){
         beep(200, NOTE_C3);
-        beep(600, NOTE_G3);
-    
+        beep(600, NOTE_G3);    
+}
+
+void playIncA(void){
+        beep(200, NOTE_A3);
+        beep(600, NOTE_B3);    
+}
+void playIncB(void){
+        beep(200, NOTE_B3);
+        beep(600, NOTE_D3);    
+}
+void playIncSw(void){
+        beep(200, NOTE_E3);
+        beep(600, NOTE_D3);    
 }
 
 /*********************************************************************

@@ -422,6 +422,10 @@
           <property key="save-temps" value="false"/>
         </C30Global>
       </item>
+      <item path="time.c" ex="true" overriding="false">
+      </item>
+      <item path="time.h" ex="true" overriding="false">
+      </item>
     </conf>
   </confs>
 </configurationDescriptor>

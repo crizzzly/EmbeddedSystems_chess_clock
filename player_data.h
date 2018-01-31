@@ -20,11 +20,11 @@
  */
 
 /* 
- * File:        player_data.h
- * Author:      c.rost  
- * Comments:    holds most important values of one player like current score or 
+ * File:        @file player_data.h
+ * Author:      @author c.rost  
+ * Comments:    @brief holds most important values of one player like current score or 
  *              complete score, time used in this session or in all sessions
- * 
+ *              @date Jan 2018
  * Revision history: 
  */
 
@@ -38,11 +38,13 @@
 
 
 typedef struct{
+            char        name[3]  ;
             uint32_t    time_all_sessions;
             uint16_t    time_current_session;
             uint16_t    moves_current_session; 
             uint16_t    moves_all_sessions; 
-            uint8_t     is_active;        
+            uint8_t     is_active; 
+            uint8_t     time_out;
             uint16_t    score;
             
             //for timer module: 

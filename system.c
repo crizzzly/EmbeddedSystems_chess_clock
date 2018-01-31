@@ -83,11 +83,16 @@ void SYS_Initialize ( void )
     pinMode(LED201, OUTPUT);
     pinMode(LED202, OUTPUT);
     pinMode(LED203, OUTPUT);
+    //piezo config
+    pinMode(PZ200, OUTPUT);
     
+    //Button config
     pinMode(BTN200, INPUT);
     pinMode(BTN201, INPUT);
     pinMode(BTN202, INPUT);
     pinMode(BTN203, INPUT);
+    //rotary enc confoh
+    pinMode(RSW204, INPUT);
 
     /*Initialize Timer*/
     TIMER_SetConfig ( TIMER_CONFIG_RTCC ) ;
@@ -98,8 +103,6 @@ void SYS_Initialize ( void )
     /* Initialize LCD*/
     PRINT_SetConfiguration ( PRINT_CONFIGURATION_LCD ) ;
     
-    /* Init Piezo*/
-    initPiezo();
 }
 
 void SOSC_Configuration ( void )
@@ -166,6 +169,7 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _T1Interrupt ( void )
                     p2.hours -- ;
                 }
                 else {
+                    p2.time_out = 1; 
                     p2.hours = 0x17 ;
                 }
             }
@@ -196,6 +200,7 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _T1Interrupt ( void )
                 }
                 else
                 {
+                    p1.time_out = 1;
                     p1.hours = 0x17 ;
                 }
             }
@@ -344,6 +349,7 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _CNInterrupt (void)
     else if(digitalRead(BTN201)){
         appData.btn201_pressed = true; 
 
+
        }
     else if(digitalRead(BTN202)){
         appData.btn202_pressed = true; 
@@ -352,11 +358,20 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _CNInterrupt (void)
     else if(digitalRead(BTN203)){
         appData.btn203_pressed = true;
     }
+    else if(digitalRead(INC_A)){
+        appData.enc_inc_a = 1; 
+        playIncA();
+    }
+    else if(digitalRead(INC_B)){
+        appData.enc_inc_b = 1; 
+        playIncB();
+    }
+    else if(digitalRead(INC_SW)){
+        appData.enc_inc_sw = 1; 
+        playIncSw();
+    }
     playDAccord();
 
     //Reset change notification interrupt flag
-    IFS1bits.CNIF = 0; 
-
-
-    //handleButton(); 
+    IFS1bits.CNIF = 0;  
 }

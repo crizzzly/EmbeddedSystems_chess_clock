@@ -2,12 +2,12 @@
 
 
   File Name:
-    app_data.h
+    @file app_data.h
 
 
 
   Description:
-    Contains all the variables and functions used commonly across the application.
+    @brief Contains all the variables and functions used commonly across the application.
  *******************************************************************************/
 
 /* Microchip Technology Inc. and its subsidiaries.  You may use this software 
@@ -34,7 +34,7 @@
 /* 
  * File:    app_data.h
  * Author:  Christina Rost / team1
- * Comments:
+ * Comments: not originally from me but updated for our project
  * Revision history: 
  */
 
@@ -102,7 +102,11 @@ typedef struct
     char menuLine3[18];
     char menuLine4[18];
     
-    //pseudo interrupt flag for button
+    //pseudo interrupt flag for input
+    volatile uint16_t enc_inc_a; 
+    volatile uint16_t enc_inc_b;     
+    volatile uint16_t enc_inc_sw; 
+
     volatile uint16_t btn_pressed ;
     volatile uint16_t btn200_pressed ;
     volatile uint16_t btn201_pressed ;
@@ -111,7 +115,6 @@ typedef struct
    
     volatile uint16_t btn_process; 
     
-    //uint8_t activePlayer; 
     uint16_t moves_max; 
 
 

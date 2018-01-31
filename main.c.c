@@ -1,47 +1,12 @@
 /*******************************************************************************
- Explorer 16 Demo Main File
-
-  Company:
-    Microchip Technology Inc.
-
-  File Name:
-    main.c
-
-  Summary:
-    Explorer 16 Demo Main File.
-
-  Description: 
-    This is the main file for the Explorer 16 Demo. It contains the main demo
-    flow and calls processor specific files for processor specific
-    implementations.
+  @file main.c
+  @brief main file for chess_clock
+  @author c.rost s.sengkhun, danyal a. x. wu
  *******************************************************************************/
 
-// DOM-IGNORE-BEGIN
-/*******************************************************************************
-Copyright (c) 2013 released Microchip Technology Inc.  All rights reserved.
 
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
 
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
-
-SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
- *******************************************************************************/
-// DOM-IGNORE-END
-
-// Check for Project Settings
+/** Check for Project Settings */
 #ifndef __dsPIC33EP512MU810__
     #error "Wrong Controller"
 #endif
@@ -66,20 +31,19 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #define WAIT_MS 120
 
-#define ONE_VOLT 310
-#define ONE_TENTH_VOLT 31
-#define ONE_HUNDREDTH_VOLT 3
-
+//time constants 
 #define TIME_3_MIN  180    //s = 180 Sek ms = 10800 
 #define TIME_5_MIN  300    //ms = 18000 Sek 
 #define TIME_15_MIN 32400   //ms = 
 #define TIME_30_MIN 64800
 
-#define PLAYER1     0
-#define PLAYER2     1
 
-#define MOVES_MAX_VAL   1000
+/** min and max values for player ,moves*/
+#define MOVES_MAX_VAL   100
+#define MOVES_MIN_VAL   10
 
+
+/** values needed by handleButton() to know what to do with the interrupt on button pins*/
 #define PROCESS_MENU        0
 #define PROCESS_SET_TIME    1
 #define PROCESS_SET_MOVES   2
@@ -104,10 +68,14 @@ void wait(uint16_t);
 void startGame(void);
 void handleButton( void );
 void showMenu(void);
-void setMoves(void );
+void customValues(void );
 void gameOver(void);
 
-
+/**
+ * struct app data holds most important variables
+ * can be accessed from the whole program if header is included
+ * 
+ */
 
 APP_DATA appData = {
     .messageLine1    = "Chess Clock IoT3\n" ,               
@@ -127,39 +95,51 @@ APP_DATA appData = {
     .menuLine4      = "BTN3: mainMenu  \n",
        
     .btn_pressed = 0,
-    .moves_max     = MOVES_MAX_VAL
+    .moves_max = MOVES_MAX_VAL
           
 };
-
+/**
+ * struct PLAYER_DATA holds values for each player
+ * some are not used yet and maybe will not until project deadline.
+ *
+ */
 PLAYER_DATA p1 = {
+    .name = "Pl1",
     .time_current_session = 0,
     .moves_current_session = 0,
     .time_current_session = TIME_3_MIN,
     .hours = 0,
     .minutes = 3,
     .seconds = 0,
+     //is set to true by interrupt handler (t1) if time is over
+    .time_out = 0,
     .is_active = 0
 };
 
 PLAYER_DATA p2 = {
+    .name = "Pl2",
     .time_current_session = 0,
     .moves_current_session = 0,
     .time_current_session = TIME_3_MIN,
     .hours = 0,
     .minutes = 3,
     .seconds = 0,
+     //is set to true by interrupt handler (t1) if time is over
+    .time_out = 0,
     .is_active = 0
             
 };
 
+//local variables for gameplay
+uint16_t initTime = TIME_3_MIN; 
+uint16_t moves_max= MOVES_MAX_VAL;
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Main Entry Point
 // *****************************************************************************
 // *****************************************************************************
-int main ( void )
-{
+int main ( void ){
     SYS_Initialize ( ) ;
     
     LCD_PutString((char *) &appData.messageLine1[0], 18 );
@@ -168,7 +148,7 @@ int main ( void )
     
     //shows main menu 
     showMenu(); 
-    //PRINT_ClearScreen(); 
+    
     
     setTime(); 
     
@@ -176,7 +156,29 @@ int main ( void )
 
     return (EXIT_SUCCESS); 
 }
+/*******************************************************************************
 
+  Function:
+   @file void showMenu (void)
+
+  Summary:
+    @brief shows menu to setup GameTime and maximal amount of moves per player
+ *      also possible to start game with default values (time = 3 min, moves = 1000)
+ *      
+ *      calls funcion handleButton to handle change notifications on puttonPin
+ *  
+  @author c.rost
+  Parameters:
+    None.
+
+  Returns:
+    None.
+
+  Remarks:
+ * CR on Jan/17
+
+ */
+/******************************************************************************/
 void showMenu(void){
     appData.btn_process = PROCESS_MENU;
     appData.btn_pressed = 0;
@@ -210,7 +212,10 @@ void showMenu(void){
    void setTime (void)
 
   Summary:
-    shows menu to setup GameTime
+     sets the gameTime to value given by pinNr. 
+ *  btn0 = 5 min, btn1 = 15 min, btn2 = 30 min, btn3 calls function to handle 
+ * rotary encoder to set custom time
+ * 
  *  
   Description:
     
@@ -260,13 +265,15 @@ void setTime(void){
         LCD_PutString ( (char*) &appData.messageSetTime4[0] , sizeof (appData.messageSetTime4 ) - 1  ) ;       
         wait(3);
     }
-    handleButton(); 
+    handleButton();
+    showMenu();
 }
 
 /*******************************************************************************
 
   Function:
-   void setMoves (void)
+   *void setMoves (void) / custom values
+ * not sure yet if i can use this method for more than one case
 
   Summary:
     sets the amount of moves a user can take until game is over
@@ -288,11 +295,60 @@ void setTime(void){
  */
 /******************************************************************************/
 
-void setMoves(void ){
+void customValues(void ){
     appData.btn_process = PROCESS_SET_MOVES;
+    moves_max = MOVES_MIN_VAL; 
+    //LCD_ClearScreen(); 
+    //LCD_PutString("set moves\n", 18 ); 
+    wait(5); 
     
+    while (digitalRead(INC_SW)){
+        LCD_ClearScreen();
+        char output [18]; 
+        sprintf(output, "Set Moves to %02d.", moves_max); 
+        LCD_PutString(output, 18);
+        
+        moves_max += readRotaryEncPulse(); 
+        if (moves_max > MOVES_MAX_VAL) 
+            moves_max = MOVES_MIN_VAL;
+        
+        if(moves_max < MOVES_MIN_VAL)
+            moves_max = MOVES_MAX_VAL; 
+      
+    } 
+    appData.btn_process = PROCESS_MENU;
+    //setTime(); 
+}
+/*******************************************************************************
+
+  Function:
+   void setName (void)
+
+  Summary:
+     sets the names of player one and player two. don't know yet if we will build 
+ *  sth like a highscore, but function body is there
+  Description:
+ *          uses rotary encoder to search through the character.
+ *          character are built from int simply by adding '0'. 
+  Precondition:
+    None.
+
+  Parameters:
+    None.
+
+  Returns:
+    None.
+
+  Remarks:
+ * CR on Jan/17
+
+ */
+/******************************************************************************/
+
+void setName(){
     
-}/*******************************************************************************
+}
+/*******************************************************************************
 
   Function:
    void gameOver (void)
@@ -325,12 +381,13 @@ void gameOver(void){
 /*******************************************************************************
 
   Function:
-   void startGame( uint16_t gameTime )
+   void startGame( void )
 
   Summary:
  starts the timer for the chess game. 
+ * on init p1 is set as active, time will count down on start
 
-  Description:
+  
     
 
   Precondition:
@@ -342,7 +399,9 @@ void gameOver(void){
   Returns:
     None.
 
-  Remarks:
+  Author
+ * @author Chr. rost
+ * @date Jan 2018:
 
  */
 /******************************************************************************/
@@ -383,7 +442,7 @@ void startGame(void){
    void wait( uint16_t seconds )
 
   Summary:
-    uses appData's interrupt flag to wait for given amount of seconds. 
+    uses appData's time interrupt flag to wait for given amount of seconds. 
 
   Description:
     updates time until change notification on buttons is detected
@@ -394,13 +453,13 @@ void startGame(void){
     None.
 
   Parameters:
-    uint16_t seconds - amount of seconds to wait
+    @param uint16_t seconds - amount of seconds to wait
 
   Returns:
     None.
 
   Remarks:
-
+@date Jan 2018
  */
 /******************************************************************************/
 void wait(uint16_t sec){
@@ -427,14 +486,41 @@ void wait(uint16_t sec){
 
       //  LCD_PutString("Leaving wait seq", 18 );   
 }
+/*******************************************************************************
 
+  Function:
+   void handleButtom( void )
+
+  Summary:
+ is called when an action on a pin may have occured. checks the source method 
+  and handles the request
+
+  Description:
+
+
+  Precondition:
+    None.
+
+  Parameters:
+ None
+
+  Returns:
+    None.
+
+  Remarks:
+@date Jan 2018
+ * @author c.rost
+ */
+/******************************************************************************/
 
 void handleButton( ){
     appData.btn_pressed = 0; 
+    
     switch(appData.btn_process){
         case PROCESS_GAME_PLAY: 
             if(appData.btn200_pressed == 1){
                 if(appData.btn200_pressed  && appData.btn201_pressed ){
+                    LCD_PutString("player 1 won\n", 18);
 
 
                     //how to score schach & schach matt??
@@ -486,7 +572,9 @@ void handleButton( ){
             }
             else if (appData.btn201_pressed){
                 appData.btn201_pressed = 0; 
-                setMoves(); 
+                playDAccord();
+
+                customValues(); 
             }
             else if (appData.btn202_pressed){
                 appData.btn202_pressed = 0; 
@@ -530,8 +618,6 @@ void handleButton( ){
             }
 
             else if (appData.btn202_pressed == true){
-                LCD_PutString("handle Button\n", 18);
-                LCD_PutString("btn2 \n", 18);
 
                 appData.btn202_pressed= 0;    
 
@@ -548,8 +634,7 @@ void handleButton( ){
             }
 
             else if (appData.btn203_pressed == true){
-                  LCD_PutString("handle Button\n", 18);
-                    LCD_PutString("btn3 \n", 18);
+
                    appData.btn203_pressed= 0;    
 
                 setTime();
@@ -570,7 +655,8 @@ void handleButton( ){
     Function to update LCD
 
   Description:
-    This function will update the time on the LCD
+    This function will update the time on the LCD for player 1 and player 2
+ *  also used for method to set custom time
 
   Precondition:
     None.
@@ -722,22 +808,3 @@ void Hex2Dec ( unsigned char count )
 }
 
 
-
-unsigned char Dec2Hex(uint16_t no){
-  //decimal passed should be in range 0 to 153
-   // char hex [] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F}; 
-    int hex=0;
-    if(!no)
-        return 0;
-    else {
-        hex=no%16;
-        Dec2Hex(no/16);
-    }
-    if(hex>9)
-        return ('A'+(hex-10));
-    else
-        return (hex);
-  
-
-
-}

@@ -39,6 +39,10 @@
 extern "C" {
 #endif /* __cplusplus */
     
+void playIncA(void);
+void playIncB(void);
+void playIncSw(void);
+    
 /*********************************************************************
 * Function: void playDAccord
 *

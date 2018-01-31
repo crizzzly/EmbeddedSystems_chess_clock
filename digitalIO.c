@@ -86,13 +86,18 @@
 #define RSW204_INC_B    PORTGbits.RG1
 #define RSW204_INC_SW   PORTGbits.RG9
 #define RSW204_ANS      ANSELGbits.ANSG9
+//IO select
 #define RSW204_TRIS0    TRISGbits.TRISG0
 #define RSW204_TRIS1    TRISGbits.TRISG1
 #define RSW204_TRIS9    TRISGbits.TRISG9
+//enable/disable weak PullUp
 #define RSW204_CNPUG0   CNPUGbits.CNPUG0
 #define RSW204_CNPUG1   CNPUGbits.CNPUG1
 #define RSW204_CNPUG9   CNPUGbits.CNPUG9
-
+//enable/disable changeNotification
+#define RSW204_CNENG0   CNENGbits.CNIEG0
+#define RSW204_CNENG1   CNENGbits.CNIEG1
+#define RSW204_CNENG9   CNENGbits.CNIEG9
 
 
 
@@ -133,6 +138,13 @@ void pinMode(uint16_t pin, uint8_t value){
             LED203_CNPU = 0;
             LED203_CNPD = 0;
             break;
+            
+        case PZ200:
+               //Piezo Output
+            PIEZ_ANS = 0;   //analogSelect to digital
+            PIEZ_TRIS = 0;  //I/O select as output
+            PIEZ_CNEN = 0;  //no interrupt
+            break; 
 
 
         case BTN200:
@@ -174,8 +186,6 @@ void pinMode(uint16_t pin, uint8_t value){
             BTN203_LAT  = 0;
             break;
             
-        default:
-            printf("this pin is not configured");
             
                /*Input Capture 3, Vec: 45, IRQ: 37, IVT Adr: 0x00005E 	
             //flag at:IFS2<5>, enable at:IEC2<5>, prio:IPC9<6:4>            
@@ -188,13 +198,26 @@ void pinMode(uint16_t pin, uint8_t value){
             IC8	IFS1<7> 	IEC1<7> 	IPC5<14:12>
             */
         case RSW204:
-            RSW204_ANS  = 0; 
             RSW204_TRIS0 = 1;
-            RSW204_TRIS1 = 1;
-            RSW204_TRIS9 = 1;
             RSW204_CNPUG0 = 1;
+            RSW204_CNENG0 =1;
+
+            
+            RSW204_TRIS1 = 1;
             RSW204_CNPUG1 = 1;
+            RSW204_CNENG1 =1;
+            
             RSW204_CNPUG9 = 1;
+            RSW204_TRIS9 = 1;
+            RSW204_ANS  = 0; 
+            RSW204_CNENG9 =1;
+           
+            
+
+
+        default:
+  //          printf("this pin is not configured");
+            break;
             
         }
                     
@@ -233,12 +256,14 @@ uint8_t digitalRead(uint16_t pin){
             
         case INC_SW:
             return((RSW204_INC_SW == HIGH) ? true : false);
+//        case RSW204:
+//            return 
         default:
-            printf("this pin is not available as input");
+            //printf("this pin is not configured as input");
             break; 
     }
     return 0;
-    
+}
 /*********************************************************************
 * Function: int8_t readRotaryEncPulse();
 *
@@ -255,23 +280,23 @@ uint8_t digitalRead(uint16_t pin){
 *
 ********************************************************************/
 
-    int8_t readRotaryEncPulse(){
-        bool inc_a = digitalRead(INC_A);
-        while (inc_a == digitalRead(INC_A)){
-            if(!digitalRead(INC_SW)){
-                return 0; 
-            }
-        }
-        
-        //Returns -1 if rotating backwards and 1 if forwards
-        if(!inc_a == digitalRead(INC_B)){
-            return -1; 
-        }
-        else{
-            return 1; 
+int8_t readRotaryEncPulse(){
+    bool inc_a = digitalRead(INC_A);
+    while (inc_a == digitalRead(INC_A)){
+        if(!digitalRead(INC_SW)){
+            return 0; 
         }
     }
+        
+    //Returns -1 if rotating backwards and 1 if forwards
+    if(!inc_a == digitalRead(INC_B)){
+        return -1; 
+    }
+    else{
+        return 1; 
+    }
 }
+
     
     /*********************************************************************
 * Function: void digitalWrite(uint16_t pin, uint8_t value);
@@ -285,31 +310,30 @@ uint8_t digitalRead(uint16_t pin){
 * Output: none
 *
 ********************************************************************/
-    void digitalWrite(uint16_t pin, uint8_t value){
-        switch(pin){
-            case LED200:
-                LED200_LAT = value;
-                break;
-            case LED201:
-                LED201_LAT = value;
-                break;
-            case LED202:
-                LED202_LAT = value;
-                break;
-            case LED203:
-                LED203_LAT = value;
-                break;
-            default:
-                printf("this pin is not available as output");
-                break;
-        }
-        
+void digitalWrite(uint16_t pin, uint8_t value){
+    switch(pin){
+        case LED200:
+            LED200_LAT = value;
+            break;
+        case LED201:
+            LED201_LAT = value;
+            break;
+        case LED202:
+            LED202_LAT = value;
+            break;
+        case LED203:
+            LED203_LAT = value;
+            break;
+        default:
+            //printf("this pin is not configured as output");
+            break;
     }
-    
-    void writeAllLED(uint8_t value){
-        LATB &= 0xF0FF; // clear all four LEDs
-        LATB |= (value << 8); // set bits again
-    }
+}
+
+void writeAllLED(uint8_t value){
+    LATB &= 0xF0FF; // clear all four LEDs
+    LATB |= (value << 8); // set bits again
+}
 
 /****************************************************
  Function:
@@ -336,11 +360,11 @@ uint8_t digitalRead(uint16_t pin){
     None
  
  **********************************************************************/    
-void initPiezo() {
+//void initPiezo() {
     //Piezo Output
-    PIEZ_ANS = 0;   //analogSelect to digital
-    PIEZ_TRIS = 0;  //I/O select as output
-    PIEZ_CNEN = 0;  //no interrupt
-}
+    //PIEZ_ANS = 0;   //analogSelect to digital
+    //PIEZ_TRIS = 0;  //I/O select as output
+    //PIEZ_CNEN = 0;  //no interrupt
+//}
 
 
