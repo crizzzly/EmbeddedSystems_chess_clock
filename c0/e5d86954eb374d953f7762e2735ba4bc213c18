@@ -1,0 +1,32 @@
+src/system/system.c
+  h_f4582de56b3d8b 1-377
+src/app/app_data.h
+  h_f4582de56b3d8b 1-123
+src/app/audio/melodies.c
+  h_f4582de56b3d8b 9-10
+src/drivers/digitalIO.c
+  h_f4582de56b3d8b 13
+src/drivers/lcd.c
+  h_f4582de56b3d8b 18
+src/drivers/onboardBtn.c
+  h_f4582de56b3d8b 10
+src/drivers/quadratureEncoder.c
+  h_f4582de56b3d8b 10
+src/drivers/timer.c
+  h_f4582de56b3d8b 14
+src/main.c.c
+  h_f4582de56b3d8b 25-26
+src/utils/time.c
+  h_f4582de56b3d8b 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c0e5d86954eb374d953f7762e2735ba4bc213c18",
+  "prompts": {},
+  "humans": {
+    "h_f4582de56b3d8b": {
+      "author": "crizzzly <c.christina.rost@gmail.com>"
+    }
+  }
+}
