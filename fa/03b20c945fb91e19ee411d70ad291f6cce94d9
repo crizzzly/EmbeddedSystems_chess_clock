@@ -1,0 +1,18 @@
+.idea/.gitignore
+  h_f4582de56b3d8b 1-10
+.idea/misc.xml
+  h_f4582de56b3d8b 1-18
+.idea/vcs.xml
+  h_f4582de56b3d8b 1-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fa03b20c945fb91e19ee411d70ad291f6cce94d9",
+  "prompts": {},
+  "humans": {
+    "h_f4582de56b3d8b": {
+      "author": "crizzzly <c.christina.rost@gmail.com>"
+    }
+  }
+}
