@@ -1,0 +1,14 @@
+src/system/config_bits.h
+  h_f4582de56b3d8b 1-48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "88134e14bfddef33e42dc58170d03dc101dc21d7",
+  "prompts": {},
+  "humans": {
+    "h_f4582de56b3d8b": {
+      "author": "crizzzly <c.christina.rost@gmail.com>"
+    }
+  }
+}
