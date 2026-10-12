@@ -1,0 +1,19 @@
+.gitignore
+  s_de1f80206b168b::t_f206a54ed8b406 1-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "79c077814cc638103995f412892a61095a74f1fc",
+  "prompts": {},
+  "sessions": {
+    "s_de1f80206b168b": {
+      "agent_id": {
+        "tool": "windsurf",
+        "id": "30c6a13c-2ed9-4c90-add2-71a874280e06",
+        "model": "SWE-1.6 Slow"
+      },
+      "human_author": "crizzzly <c.christina.rost@gmail.com>"
+    }
+  }
+}
