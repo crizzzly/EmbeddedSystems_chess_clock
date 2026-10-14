@@ -36,7 +36,7 @@
 // live documentation
 
 #ifdef	__cplusplus
-extern "C" {
+extern "C"
 #endif /* __cplusplus */
     
 void playIncA(void);

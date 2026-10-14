@@ -25,14 +25,15 @@
  * Comments:    configures onboard leds and provides function to change state
  * Revision history: 
  */
+#ifndef ONBOARDLEDS_H
+#define ONBOARDLEDS_H
 
 
-
-#include <stdint.h> // include processor files - each processor file is guarded.  
 #include <stdbool.h>
+#include <stdint.h> // include processor files - each processor file is guarded.
 
-#ifndef ONBOARDLEDS_H               //guards against multiple inclusion
-    #define ONBOARDLEDS_H
+// #ifndef ONBOARDLEDS_H               //guards against multiple inclusion
+// #define ONBOARDLEDS_H
 
 //type definitions 
 typedef enum {
@@ -47,7 +48,6 @@ typedef enum {
 
 //sets the pin as input or output pin or if it should change state on pullup or pulldown
 void pinMode(uint16_t pin, uint8_t mode);
-
 
 //reads the current value of the pin
 uint8_t digitalRead(uint16_t pin); 
@@ -150,5 +150,4 @@ bool LED_Get(LED led);
 void LED_Enable(LED led);
 
 #endif //LEDS_H
-
-
+// endif // ONBOARDLEDS_H

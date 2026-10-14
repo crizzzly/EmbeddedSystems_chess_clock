@@ -6,9 +6,9 @@
  */
 
 
-#include "../melodies.h"
-#include "../music.h"
-#include "digitalIO.h"
+#include "melodies.h"
+#include "music.h"
+#include "../../drivers/digitalIO.h"
 #include <time.h>
 #include <stdlib.h>
 #include <stdint.h>

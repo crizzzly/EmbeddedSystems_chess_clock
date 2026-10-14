@@ -15,7 +15,7 @@ limitations under the License.
 *******************************************************************************/
 
 #include <xc.h>
-#include "../lcd.h"
+#include "lcd.h"
 #include <stdint.h>
 
 #ifndef SYSTEM_PERIPHERAL_CLOCK

@@ -9,9 +9,14 @@
 
 # IDE files
 .idea/
-nbproject/
 .DS_Store
 
+# MPLAB X local IDE state
+nbproject/private
+
+
+# MPLAB X: machine-specific build configuration
+nbproject/Makefile-local-*.mk
 # Generated documentation
 html/
 latex/

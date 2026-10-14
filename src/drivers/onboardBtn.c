@@ -7,7 +7,7 @@
 
 
 #include <xc.h>
-#include "../onboardBtn.h"
+#include "onboardBtn.h"
 #include <stdbool.h>
 
 #define BTN_ONB0_PORT   PORTGbits.RG12 

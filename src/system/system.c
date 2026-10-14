@@ -13,10 +13,10 @@
 
 #include <xc.h>
 #include "../app/app_data.h"
-#include "../player_data.h"
-#include "../myxc.h"
+#include "../app/player_data.h"
+#include "myxc.h"
 #include "../drivers/digitalIO.h"
-#include "../melodies.h"
+#include "../app/audio/melodies.h"
 // ****************************************************************************
 // ****************************************************************************
 // Section: File Scope Functions

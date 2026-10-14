@@ -21,10 +21,10 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include "app_data.h"
-#include "../melodies.h"
-#include "../player_data.h"
-#include "digitalIO.h"
+#include "app/app_data.h"
+#include "app/audio/melodies.h"
+#include "app/player_data.h"
+#include "drivers/digitalIO.h"
 
 #define FCY 4000000UL
 #include <libpic30.h>

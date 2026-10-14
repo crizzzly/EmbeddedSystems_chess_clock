@@ -18,25 +18,24 @@
  * MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE 
  * TERMS. 
  */
-
 /* 
  * File:        timer.h
  * Author:      Christina Rost / Team 1
  * Comments:
  * Revision history: 
  */
-
 // This is a guard condition so that contents of this file are not included
-// more than once.  
+// more than once.
+#ifndef TIMER_H
+#define	TIMER_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
 
-#ifndef TIMER_H
-#define	TIMER_H
 #define TIMER_TICK_INTERVAL_MICRO_SECONDS 1000
+
 
 /*Type Definitions--------------------------------------*/
 typedef void (*TICK_HANDLER)(void);
@@ -46,6 +45,7 @@ typedef enum {
     TIMER_CONFIG_RTCC,
     TIMER_CONFIG_OFF
 }TIMER_CONFIGURATIONS;
+
 
 /******************************************************************************
  * FUNCTION: void TIMER_CancelTICK(TICK_HANDLER handle)
@@ -57,8 +57,8 @@ typedef enum {
  * Output: none 
  * *****************************************************************************
  */
-
 void TIMER_CancelTICK(TICK_HANDLER handle);
+
 
 /*******************************************************************************
  * Function: bool TIMER_RequestTick(TICK_HANDLER handle, uint32_t rate)
@@ -73,8 +73,8 @@ void TIMER_CancelTICK(TICK_HANDLER handle);
  * Output:  true if successful - false if not
  * 
  *******************************************************************************/
-
 bool TIMER_RequestTick(TICK_HANDLER handle, uint32_t rate);
+
 
 /*******************************************************************************
  * Function: bool TIMER_SetConfig(TIMER_CONFIGURATIONS config)
@@ -89,9 +89,8 @@ bool TIMER_RequestTick(TICK_HANDLER handle, uint32_t rate);
  * Output:  true if successful - false if not
  * 
  *******************************************************************************/
-
 bool TIMER_SetConfig(TIMER_CONFIGURATIONS config);
 
 
-#endif	/* XC_HEADER_TEMPLATE_H */
+#endif	/* TIMER_H */
 

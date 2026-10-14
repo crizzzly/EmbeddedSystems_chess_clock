@@ -39,8 +39,8 @@
  */
 
 //#include "digitalIO.h"
-#include "../lcd.h"
-#include "../timer.h"
+#include "../drivers/lcd.h"
+#include "../drivers/timer.h"
 #include "../drivers/print_lcd.h"
 
 // *****************************************************************************

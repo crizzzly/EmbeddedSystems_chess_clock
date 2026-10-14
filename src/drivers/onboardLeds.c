@@ -6,9 +6,9 @@
  */
 
 
-#include <xc.h>
+#include "xc.h"
 #include <stdbool.h>
-#include "onboardLEDs.h"
+#include "onboardLeds.h"
 
 #define LED_ONB0_LAT LATBbits.LATB8
 #define LED_ONB1_LAT LATBbits.LATB9

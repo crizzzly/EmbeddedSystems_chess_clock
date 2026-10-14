@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
-#include "../timer.h"
+#include "timer.h"
 
 /* Compiler checks and configuration *******************************/
 #ifndef TIMER_MAX_CLIENTS
@@ -63,6 +63,7 @@ void TIMER_CancelTICK(TICK_HANDLER handle){
     }
 }
 
+
 /*******************************************************************************
  * Function: bool TIMER_RequestTick(TICK_HANDLER handle, uint32_t rate)
  * 
@@ -90,6 +91,7 @@ bool TIMER_RequestTick(TICK_HANDLER handle, uint32_t rate){
     }
     return false;
 }
+
 
 /*******************************************************************************
  * Function: bool TIMER_SetConfig(TIMER_CONFIGURATIONS config)
@@ -185,8 +187,9 @@ bool TIMER_SetConfig(TIMER_CONFIGURATIONS config){
  * Output:  none
  * 
  *******************************************************************************/
-
-void __attribute__ ((__interrupt__, auto psy)) __T3Interrupt (void){
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wignored-attributes"
+void __attribute__ ((__interrupt__, auto_psv)) __T3Interrupt (void){
     uint8_t i; 
     
     for(i=0; i < TIMER_MAX_CLIENTS; i++){
@@ -201,7 +204,7 @@ void __attribute__ ((__interrupt__, auto psy)) __T3Interrupt (void){
     }
 }
 
-
+#pragma clang diagnostic pop
 
 
 

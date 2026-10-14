@@ -7,7 +7,7 @@
 
 
 #include <xc.h>
-#include "../quadratureEncoder.h"
+#include "quadratureEncoder.h"
 
 /* List of SFRs for QEI */
 /* This list contains the SFRs with default (POR) values to be used for configuring QEI */
