@@ -1,0 +1,153 @@
+.gitignore
+  h_f4582de56b3d8b 14-19
+src/drivers/digitalIO.c
+  s_15805d0dd1f20b::t_922e19528b95d9 13
+src/system/system.c
+  h_f4582de56b3d8b 17
+  s_15805d0dd1f20b::t_fbdca8b5c50f64 16,19
+src/drivers/onboardLeds.c
+  h_f4582de56b3d8b 9,11
+nbproject/configurations.xml
+  h_f4582de56b3d8b 1-431
+src/app/app_data.h
+  s_15805d0dd1f20b::t_e1ab9885ad495e 42-43
+src/drivers/quadratureEncoder.c
+  s_15805d0dd1f20b::t_c8bad67354c2b7 10
+src/drivers/digitalIO.h
+  h_f4582de56b3d8b 50-136
+  s_15805d0dd1f20b::t_28983e5d9d79b3 16
+src/drivers/onboardLeds.h
+  h_f4582de56b3d8b 28-29,33,35-36,153
+tools/runDoxygen.bat
+  h_f4582de56b3d8b 1
+src/drivers/timer.h
+  s_ae3304a3eb8297::t_8cdd4edffa5b97 29-30
+  h_f4582de56b3d8b 39,49,62,78
+  s_ae3304a3eb8297::t_55809a052b4073 28
+  h_f4582de56b3d8b 95
+src/utils/time.c
+  h_f4582de56b3d8b 9,19-31,38,40,42
+  s_922916f721ff0f::t_2f5f5a4dfad1ec 8
+src/drivers/timer.c
+  s_ae3304a3eb8297::t_4aebba79414a81 192
+  h_f4582de56b3d8b 66,190-191,207
+  s_15805d0dd1f20b::t_e36aa98221c0bb 14
+  h_f4582de56b3d8b 95
+CMakeLists.txt
+  s_ae3304a3eb8297::t_10ebf4b0939c53 63
+  h_f4582de56b3d8b 10
+  s_15805d0dd1f20b::t_388278702545a7 50
+  s_15805d0dd1f20b::t_06099a87c06ee5 48-49
+  s_5d79fa8dfedfc5::t_d6fa44a67914a2 1-9,11-47,51-60,64-66
+  s_15805d0dd1f20b::t_92d850798c2fa3 61-62
+src/drivers/onboardBtn.c
+  s_15805d0dd1f20b::t_26cfd9cd33f9ec 10
+src/app/audio/melodies.c
+  s_15805d0dd1f20b::t_039db20e13dc0f 9-10
+  h_f4582de56b3d8b 11
+src/utils/time.h
+  h_f4582de56b3d8b 43
+src/system/myxc.h
+  h_f4582de56b3d8b 2,4,6,11,15,21,28,34,39,44,47
+src/drivers/lcd.c
+  s_15805d0dd1f20b::t_3a50398b0a6665 18
+nbproject/Makefile-default.mk
+  h_f4582de56b3d8b 60,70,139,143,217,221
+  s_15805d0dd1f20b::t_88a692e488d074 97-136
+  s_15805d0dd1f20b::t_fda653b506e466 214
+  s_15805d0dd1f20b::t_64430765c0ea1e 175
+  s_15805d0dd1f20b::t_fb2a24d403c345 140,176,183,190,197,204,211,218,222-250
+  s_15805d0dd1f20b::t_79aa85ad6e1881 179
+  s_15805d0dd1f20b::t_cc4c2bf6b828d2 297
+  s_15805d0dd1f20b::t_9f3d649c5562fc 144-172
+  s_15805d0dd1f20b::t_a1686438c710f5 193
+  s_15805d0dd1f20b::t_cd602f12d03196 63-67
+  s_15805d0dd1f20b::t_dfb00068a76a6b 182
+  s_15805d0dd1f20b::t_d9f086523d47fb 200
+  s_15805d0dd1f20b::t_5aca8d83bdd4d6 83-84
+  s_15805d0dd1f20b::t_888fd3fe6647b3 196
+  s_15805d0dd1f20b::t_b10f3a6ff4601c 203
+  s_15805d0dd1f20b::t_42ea42e3bf8370 207
+  s_15805d0dd1f20b::t_6255e376ad1795 186
+  s_15805d0dd1f20b::t_82b4d19aa3bfa6 189
+  s_15805d0dd1f20b::t_d2ee3d9047cad2 210
+  s_15805d0dd1f20b::t_0758d50d9c3e93 85-87,94-96
+  s_15805d0dd1f20b::t_2e382c3dbad74e 173-174
+  s_15805d0dd1f20b::t_9a0d584a70c866 177-178
+  s_15805d0dd1f20b::t_c23f5d214fb40a 180-181
+  s_15805d0dd1f20b::t_4f823a25d7de2a 184-185
+  s_15805d0dd1f20b::t_b65f539c611c2b 187-188
+  s_15805d0dd1f20b::t_1cdcc6f419d3be 191-192
+  s_15805d0dd1f20b::t_1b0ea9e1010e28 194-195
+  s_15805d0dd1f20b::t_33b426cd65c935 198-199
+  s_15805d0dd1f20b::t_fe9e44edf5db19 201-202
+  s_15805d0dd1f20b::t_3d20d4b6449af3 205-206
+  s_15805d0dd1f20b::t_d5f51b5ac7a468 208-209
+  s_15805d0dd1f20b::t_02ab755853137f 212-213
+  s_15805d0dd1f20b::t_9e953909463824 251-253,294-296
+  s_15805d0dd1f20b::t_ab4240a8268c0e 298-300
+  h_f4582de56b3d8b 1-59,61-62,68-69,71-82,88-93,137-138,141-142,215-216,219-220,254-293
+Doxyfile
+  h_f4582de56b3d8b 35,47,61,71
+src/app/audio/melodies.h
+  h_f4582de56b3d8b 39
+README.md
+  h_f4582de56b3d8b 1-74
+nbproject/project.xml
+  h_f4582de56b3d8b 1-17
+src/main.c
+  s_15805d0dd1f20b::t_730648555444ab 24-27
+nbproject/Makefile-genesis.properties
+  h_f4582de56b3d8b 1-9
+nbproject/Makefile-impl.mk
+  h_f4582de56b3d8b 1-69
+nbproject/Makefile-variables.mk
+  h_f4582de56b3d8b 1-13
+nbproject/Package-default.bash
+  h_f4582de56b3d8b 1-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f6f77c2d84a34c831369f2a78676a21ad864bc25",
+  "prompts": {},
+  "humans": {
+    "h_f4582de56b3d8b": {
+      "author": "crizzzly <c.christina.rost@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_15805d0dd1f20b": {
+      "agent_id": {
+        "tool": "windsurf",
+        "id": "b0f0868d-3d0e-40c9-9b7f-57e367cf06b2",
+        "model": "SWE-1.6 Slow"
+      },
+      "human_author": "crizzzly <c.christina.rost@gmail.com>"
+    },
+    "s_5d79fa8dfedfc5": {
+      "agent_id": {
+        "tool": "windsurf",
+        "id": "b2fbf6c1-0c55-4401-ab1b-c95c7777c410",
+        "model": "SWE-1.6 Slow"
+      },
+      "human_author": "crizzzly <c.christina.rost@gmail.com>"
+    },
+    "s_922916f721ff0f": {
+      "agent_id": {
+        "tool": "windsurf",
+        "id": "741ef307-8b8a-4c04-9ed5-087ea0e5a64f",
+        "model": "SWE-1.6 Slow"
+      },
+      "human_author": "crizzzly <c.christina.rost@gmail.com>"
+    },
+    "s_ae3304a3eb8297": {
+      "agent_id": {
+        "tool": "windsurf",
+        "id": "7a454996-f16a-4051-a22e-f04bd2519c8e",
+        "model": "SWE-1.6 Slow"
+      },
+      "human_author": "crizzzly <c.christina.rost@gmail.com>"
+    }
+  }
+}
