@@ -1,15 +1,23 @@
-/** \mainpage Index Page
+/**
+* \mainpage Chess Clock
  *
  * \section genDescr_sec General Description
  *
- * The purpose of this software is getting started quickly with a basic functionality
- * (blinking LED).
+ * This project implements a chess clock on a Microchip dsPIC33
+ * microcontroller using embedded C.
+ *
+ * Developed as part of a five-person university group project,
+ * the software implements the clock logic and interfaces with
+ * the board's hardware peripherals.
  *
  * \section hardware_sec Hardware
- * The software has been designed for the EDA dsPIC33-board.
- * Documentation is available on https://eda-wiki.eda.htw-aalen.de/studi/PIClab/ExperimentierBoardPIC24dsPIC33
+ *
+ * The software was designed for the EDA dsPIC33 experiment board
+ * at Hochschule Aalen.
  *
  * \subsection hwSub_sec Hardware Variants
- * Although beeing designed for the dsPIC33 variant, the software should also run on a board populated
- * with the PIC24H-Controller. This has not been tested.
+ *
+ * The project targets the dsPIC33EP512MU810 microcontroller.
+ * Compatibility with the PIC24H variant was mentioned in the
+ * original documentation but has not been tested.
  */
