@@ -1,0 +1,17 @@
+Doxyfile
+  h_f4582de56b3d8b 767,843
+readme.c
+  h_f4582de56b3d8b 2,6-7,9-11,15-16,20-22
+  h_f4582de56b3d8b 1,8,14,19,23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7d25d43add0329e78d4ab4fa2774f1e2b8c5c7f4",
+  "prompts": {},
+  "humans": {
+    "h_f4582de56b3d8b": {
+      "author": "crizzzly <c.christina.rost@gmail.com>"
+    }
+  }
+}
